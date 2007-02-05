@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string># If there’s a selection, output that twice (as a snippet)
+# leaving the duplicate as the new selected text.
+# Otherwise split the current line around the caret and
+# output “right, left” to duplicate the line, leaving the
+# caret in the same place on the new line
+
+if [[ -n "$TM_SELECTED_TEXT" ]]
+   then exit_insert_snippet '$TM_SELECTED_TEXT${0:$TM_SELECTED_TEXT}'
+   else exit_insert_text "${TM_CURRENT_LINE:TM_LINE_INDEX}
+${TM_CURRENT_LINE:0:TM_LINE_INDEX}"
+fi
+</string>
+	<key>fallbackInput</key>
+	<string>line</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^D</string>
+	<key>name</key>
+	<string>Duplicate Line / Selection</string>
+	<key>output</key>
+	<string>afterSelectedText</string>
+	<key>uuid</key>
+	<string>C46A9DBC-0B06-49DF-838B-491B529ECF22</string>
+</dict>
+</plist>

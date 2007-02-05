@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>content</key>
+        <string>&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot;&#x0A;&#x09;&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt;&#x0A;&lt;html&gt;&#x0A;&#x09;&lt;head&gt;&#x0A;&#x09;&#x09;&lt;meta http-equiv=&quot;Content-type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;&#x0A;&#x09;&#x09;&lt;title&gt;${1:${TM_FILENAME/((.+)\..*)?/(?2:$2:Page Title)/}}&lt;/title&gt;&#x0A;&#x09;&#x09;&lt;link rel=&quot;${3:stylesheet}&quot; href=&quot;${4:/css/master.css}&quot; type=&quot;text/css&quot; media=&quot;${5:screen}&quot; title=&quot;${6:no title}&quot; charset=&quot;${7:utf-8}&quot;${TM_XHTML} /&gt;&#x0A;&#x09;&lt;/head&gt;&#x0A;&#x09;&lt;body&gt;&#x0A;&#x09;&#x09;$0&#x0A;&#x09;&lt;/body&gt;&#x0A;&lt;/html&gt;</string>
+        <key>name</key>
+        <string>XHTML Document Skeleton</string>
+        <key>scope</key>
+        <string>text.html</string>
+        <key>tabTrigger</key>
+        <string>skel</string>
+        <key>uuid</key>
+        <string>6013E6BC-5EBF-475B-886A-15EE195A4302</string>
+    </dict>
+</plist>

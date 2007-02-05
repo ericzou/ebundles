@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>get_pw () {
+  res=$(CocoaDialog secure-inputbox --float --no-newline \
+    --title 'Encrypt Text With AES 128' \
+    --informative-text "$1" \
+    --button1 "$2" --button2 Cancel)
+  [[ ${res:0:1} == 1 ]] &amp;&amp; echo -n "${res:2}"
+}
+
+pw1=$(get_pw 'What password should be used?'   Continue)
+[[ -z "$pw1" ]] &amp;&amp; exit_discard
+pw2=$(get_pw 'Enter password again to verify.' Encrypt)
+
+if [[ "$pw1" == "$pw2" ]];
+  then openssl enc -e -aes128 -base64 -pass "pass:$pw1"
+  else exit_show_tool_tip 'Password mismatch! Please play again.'
+fi
+</string>
+	<key>fallbackInput</key>
+	<string>document</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string>^@E</string>
+	<key>name</key>
+	<string>AES Encrypt Document / Selection With Password…</string>
+	<key>output</key>
+	<string>replaceSelectedText</string>
+	<key>uuid</key>
+	<string>D39DC176-BC8D-11D9-8946-000D93589AF6</string>
+</dict>
+</plist>

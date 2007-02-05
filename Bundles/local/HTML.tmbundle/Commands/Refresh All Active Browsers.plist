@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>beforeRunningCommand</key>
+        <string>saveActiveFile</string>
+        <key>command</key>
+        <string>###&#x09;Refresh All Active Browsers - OmniWeb, Safari, Firefox &amp; IE&#x0A;### v1.0. 2005-03-29&#x0A;###&#x0A;&#x0A;# Check if Internet Explorer is running, if so refresh&#x0A;ps -xc|grep -sq &quot;Internet Explorer&quot; &amp;&amp; osascript -e &apos;tell app &quot;Internet Explorer&quot;&apos; -e &apos;activate&apos; -e &apos;OpenURL &quot;JavaScript:window.location.reload();&quot; toWindow -1&apos; -e &apos;end tell&apos;&#x0A;&#x0A;# Check if OmniWeb is running, if so refresh&#x0A;ps -xc|grep -sq OmniWeb &amp;&amp; osascript -e &apos;tell app &quot;OmniWeb&quot;&apos; -e &apos;activate&apos; -e &apos;reload first browser&apos; -e &apos;end tell&apos;&#x0A;&#x0A;# Check if Firefox is running, if so refresh&#x0A;ps -xc|grep -sqi firefox &amp;&amp; osascript &lt;&lt;&apos;APPLESCRIPT&apos;&#x0A;   tell app &quot;Firefox&quot; to activate&#x0A;   tell app &quot;System Events&quot;&#x0A;      if UI elements enabled then&#x0A;         keystroke &quot;r&quot; using command down&#x0A;         -- Fails if System Preferences &gt; Universal access &gt; &quot;Enable access for assistive devices&quot; is not on &#x0A;      else&#x0A;         tell app &quot;Firefox&quot; to Get URL &quot;JavaScript:window.location.reload();&quot; inside window 1&#x0A;         -- Fails if Firefox is set to open URLs from external apps in new tabs.&#x0A;      end if&#x0A;   end tell&#x0A;APPLESCRIPT&#x0A;&#x0A;# Check if Safari is running, if so refresh&#x0A;ps -xc|grep -sq Safari &amp;&amp; osascript -e &apos;tell app &quot;Safari&quot;&apos; -e &apos;activate&apos; -e &apos;do JavaScript &quot;window.location.reload();&quot; in first document&apos; -e &apos;end tell&apos;&#x0A;</string>
+        <key>input</key>
+        <string>none</string>
+        <key>keyEquivalent</key>
+        <string>@r</string>
+        <key>name</key>
+        <string>Refresh Running Browser(s)</string>
+        <key>output</key>
+        <string>discard</string>
+        <key>scope</key>
+        <string>text.html, source.css</string>
+        <key>uuid</key>
+        <string>B8651C6E-A05E-11D9-86AC-000D93C8BE28</string>
+    </dict>
+</plist>
