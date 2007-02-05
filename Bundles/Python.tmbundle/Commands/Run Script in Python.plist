@@ -9,7 +9,7 @@
 [[ -z "$TM_FILEPATH" ]] &amp;&amp; TM_TMPFILE=$(mktemp -t pythonInTerm)
 : "${TM_FILEPATH:=$TM_TMPFILE}"; cat &gt;"$TM_FILEPATH"
 
-TPY=${TM_PYTHON:-pythonw}
+TPY=${TM_PYTHON:-python}
 
 esc () {
 STR="$1" ruby &lt;&lt;"RUBY"
@@ -20,15 +20,7 @@ STR="$1" ruby &lt;&lt;"RUBY"
 RUBY
 }
 
-osascript &lt;&lt;- APPLESCRIPT
-	tell app "Terminal"
-	    launch
-	    activate
-	    do script "clear; cd $(esc "${TM_DIRECTORY}"); $(esc "${TPY}") $(esc "${TM_FILEPATH}"); rm -f $(esc "${TM_TMPFILE}")"
-	    set position of first window to { 100, 100 }
-	end tell
-APPLESCRIPT
-
+run rxvt -e bash -c "clear; cd ${TM_DIRECTORY}; ${TPY} ${TM_FILEPATH}; rm -f ${TM_TMPFILE}; echo Press enter to continue...; read clear"
 </string>
 	<key>input</key>
 	<string>document</string>
