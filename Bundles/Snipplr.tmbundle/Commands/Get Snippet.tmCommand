@@ -12,57 +12,57 @@
         <string>insertAsSnippet</string>
         <key>command</key>
         <string>#!/usr/bin/env ruby -w
-require "xmlrpc/client"
-require "cgi"
-require ENV['TM_SUPPORT_PATH'] + "/lib/exit_codes.rb"
-require ENV['TM_SUPPORT_PATH'] + "/lib/escape.rb"
+require &quot;xmlrpc/client&quot;
+require &quot;cgi&quot;
+require ENV[&apos;TM_SUPPORT_PATH&apos;] + &quot;/lib/exit_codes.rb&quot;
+require ENV[&apos;TM_SUPPORT_PATH&apos;] + &quot;/lib/escape.rb&quot;
 
-COCOA_DIALOG = ENV['TM_SUPPORT_PATH'] + '/bin/CocoaDialog'
+COCOA_DIALOG = ENV[&apos;TM_SUPPORT_PATH&apos;] + &apos;/bin/CocoaDialog&apos;
 unless File.exists?(COCOA_DIALOG)
-  print "Error: wxCocoaDialog not found"
+  print &quot;Error: wxCocoaDialog not found&quot;
   TextMate.exit_show_tool_tip
 end
 
 # Need to hardcode the variable until we get
 # environment variables in e.
-API_KEY = "YOUR_API_KEY_HERE" 
-server = XMLRPC::Client.new( "snipplr.com", "/xml-rpc.php")
+API_KEY = &quot;YOUR_API_KEY_HERE&quot; 
+server = XMLRPC::Client.new( &quot;snipplr.com&quot;, &quot;/xml-rpc.php&quot;)
 
-if 0 == server.call("user.checkkey", API_KEY)
-  puts "#{API_KEY} was not accepted as a valid API Key"
+if 0 == server.call(&quot;user.checkkey&quot;, API_KEY)
+  puts &quot;#{API_KEY} was not accepted as a valid API Key&quot;
   TextMate.exit_show_tool_tip
 end
 
 begin
-  result = server.call("snippet.list", API_KEY)
-  result_list = ""
-  result.each { |row| result_list += "'#{row['id']} : #{row['title']}' " }
+  result = server.call(&quot;snippet.list&quot;, API_KEY)
+  result_list = &quot;&quot;
+  result.each { |row| result_list += &quot;&apos;#{row[&apos;id&apos;]} : #{row[&apos;title&apos;]}&apos; &quot; }
   
-  res=%x("#{COCOA_DIALOG}" dropdown \
-      --title "Retrieve Snippet" \
+  res=%x(&quot;#{COCOA_DIALOG}&quot; dropdown \
+      --title &quot;Retrieve Snippet&quot; \
       --string-output \
-      --text "You have #{result.length} Snipplr entries stored under this API Key." \
+      --text &quot;You have #{result.length} Snipplr entries stored under this API Key.&quot; \
       --items #{result_list} \
-      --button1 'Retreive' --button2 'Cancel')
+      --button1 &apos;Retreive&apos; --button2 &apos;Cancel&apos;)
   button, item = res.split
   case button
-    when 'Retreive'
-      $snippet = server.call("snippet.get", item)
-    when 'Cancel'
-      puts "Snippet retreival cancelled."
+    when &apos;Retreive&apos;
+      $snippet = server.call(&quot;snippet.get&quot;, item)
+    when &apos;Cancel&apos;
+      puts &quot;Snippet retreival cancelled.&quot;
       exit
   end 
-  puts e_sn(CGI::unescapeHTML($snippet['source']))
+  puts e_sn(CGI::unescapeHTML($snippet[&apos;source&apos;]))
   
-rescue XMLRPC::FaultException => err
+rescue XMLRPC::FaultException =&gt; err
   if err.faultString =~ /No snippets found/ 
-    print "You don't have any snippets yet!" 
+    print &quot;You don&apos;t have any snippets yet!&quot; 
   else 
-    print "Error: " + err.faultCode.to_s + ", " + err.faultString
+    print &quot;Error: &quot; + err.faultCode.to_s + &quot;, &quot; + err.faultString
   end
   TextMate.exit_show_tool_tip
 rescue
-  print "Error: #{$!}"
+  print &quot;Error: #{$!}&quot;
   TextMate.exit_show_tool_tip
 end</string>
         <key>keyEquivalent</key>
