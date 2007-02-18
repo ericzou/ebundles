@@ -520,7 +520,7 @@ TEXT
     begin
       current_password = self.password
       require "#{ENV['TM_SUPPORT_PATH']}/lib/progress.rb"
-      TextMate.call_with_progress(:title => "Posting to Blog", :message => "Contacting Server “#{@host}”…") do
+      TextMate.call_with_progress(:title => "Posting to Blog", :message => "Contacting Server '#{@host}'...") do
         if post_id
           result = client.editPost(self.post_id, self.username, current_password, self.post, self.publish)
         else
@@ -712,7 +712,7 @@ TEXT
               print "!#{url} (${1:#{alt}})!"
             else
               height_width = ""
-              height, width = %x{identify #{e_sh full_path}}.delete(e_sh full_path).scan(/\d+x\d+/)[0].split('x')
+              height, width = %x{identify #{e_sh(full_path)}}.delete(e_sh(full_path)).scan(/\d+x\d+/)[0].split('x')
               if height && width
                 height_width = %Q{ height="#{height}" width="#{width}"}
               end
