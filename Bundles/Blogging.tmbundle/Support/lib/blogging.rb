@@ -598,12 +598,18 @@ TEXT
       titles.push(name)
     end
     titles.sort!
-
-    require "#{ENV['TM_SUPPORT_PATH']}/lib/dialog.rb"
-    opt = Dialog.menu(titles)
-
-    if opt != nil
-      TextMate.exit_insert_snippet("Blog: " + titles[opt] + '$0')
+    cocoa_dialog = "#{ENV['TM_SUPPORT_PATH']}/bin/CocoaDialog"
+    choices = ""
+    titles.each { |t| choices += "\"#{t.chomp}\" " }
+    res = %x("#{cocoa_dialog}" dropdown \
+        --string-output --no-newline \
+        --title "Choose Blog Endpoint" \
+        --text "Select a Blog to Use:" \
+        --items #{choices} \
+        --button1 "OK" --button2 "Cancel")
+    button, opt = res.split
+    if opt != nil and button == "OK"
+       TextMate.exit_insert_snippet("Blog: " + opt + '$0')
     end
   end
 
