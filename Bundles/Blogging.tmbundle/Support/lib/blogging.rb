@@ -500,7 +500,7 @@ TEXT
       --button1 Ok --button2 Cancel \
       --items #{titles.join(' ')}})
 
-    result = result.split(/\n/)
+    result = result.split
     if result[0] == "1"
       name = titles[result[1].to_i].gsub(/^"|"$/, '')
       return self.endpoints[name]
