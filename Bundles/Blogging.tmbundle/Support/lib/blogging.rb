@@ -706,7 +706,7 @@ TEXT
     data['name'] = upload_name
     data['bits'] = XMLRPC::Base64.new(IO.read(full_path))
 
-    TextMate.call_with_progress(:title => "Upload Image", :message => "Uploading to Server “#{@host}”…") do
+    TextMate.call_with_progress(:title => "Upload Image", :message => "Uploading to Server '#{@host}'...") do
       begin
         result = client.newMediaObject(self.blog_id, self.username, current_password, data)
         url = result['url']
