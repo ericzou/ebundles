@@ -720,7 +720,7 @@ TEXT
               height_width = ""
               image_info_cmd = ENV['TM_BUNDLE_SUPPORT'] + "/bin/ImageInfo"
               image_winfile = %x{cygpath -w "#{full_path}"}.chomp
-              height, width = %x{ #{image_info_cmd} "#{image_winfile}" }.split[2, 3]
+              width, height = %x{"#{image_info_cmd}" "#{image_winfile}" }.split[2, 3]
               if height && width
                 height_width = %Q{ height="#{height}" width="#{width}"}
               end
