@@ -1,4 +1,5 @@
-#!/usr/bin/env ruby -w
+#!/usr/bin/env ruby
+BEGIN {$VERBOSE = true}
 
 # if we are not called directly from TM (e.g. JavaScript) the caller
 # should ensure that RUBYLIB is set properly
