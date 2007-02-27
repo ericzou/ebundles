@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>name</key>
+        <string>Complete Word</string>
+        <key>uuid</key>
+        <string>8FB086F3-41E1-433D-9ED5-94C1863526D8</string>
+        <key>input</key>
+        <string>selection</string>
+        <key>output</key>
+        <string>afterSelectedText</string>
+        <key>command</key>
+        <string>#!/usr/bin/env ruby
+
+file = ENV[&apos;TM_FILEPATH&apos;]
+cur = ENV[&apos;TM_CURRENT_WORD&apos;]
+
+if cur != nil
+  f = File.open(file)
+  str = f.read()
+  f.close()
+
+  strArr = str.split(/\b/)
+
+  strArr.each do |s|
+    if s != cur
+      if s.index(cur) == 0
+        STDOUT &lt;&lt; s.sub(cur,&apos;&apos;)
+        break
+      end
+    end
+  end
+end</string>
+        <key>keyEquivalent</key>
+        <string>^/</string>
+    </dict>
+</plist>
