@@ -1,55 +1,20 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>beforeRunningCommand</key>
-	<string>nop</string>
-	<key>command</key>
-	<string>#!/usr/bin/env ruby
-
-doc        = STDIN.read
-line       = ENV['TM_LINE_NUMBER'].to_i
-line_index = ENV['TM_LINE_INDEX'].to_i
-
-if ENV.has_key? 'TM_INPUT_START_LINE' then
-  line       = ENV['TM_INPUT_START_LINE'].to_i
-  line_index = ENV['TM_INPUT_START_LINE_INDEX'].to_i
-end
-
-before = /(.*\n){#{line-1}}.{#{line_index}}/.match(doc)[0]
-
-# remove all self-closing tags
-before.gsub!(/&lt;(area|base|basefont|br|col|frame|hr|img|input|isindex|link|meta|param)\b[^&gt;]*&gt;|&lt;[^&gt;]+\/\s*&gt;/, '') 
-
-# remove all comments
-before.gsub!(/&lt;!--.*?--&gt;/m, '')
-
-stack = [ ]
-before.scan(/&lt;\s*(\/)?\s*(\w[\w:-]*)[^&gt;]*&gt;/) do |m|
-  if m[0].nil? then
-    stack &lt;&lt; m[1]
-  else
-    until stack.empty? do
-      close_tag = stack.pop
-      break if close_tag == m[1]
-    end
-  end
-end
-
-if stack.empty? then
-  %x{ osascript -e beep &amp;&gt;/dev/null &amp; }
-else
-  print "&lt;/#{stack.pop}&gt;"
-end</string>
-	<key>input</key>
-	<string>document</string>
-	<key>keyEquivalent</key>
-	<string>~@.</string>
-	<key>name</key>
-	<string>Insert Close Tag</string>
-	<key>output</key>
-	<string>afterSelectedText</string>
-	<key>uuid</key>
-	<string>0658019F-3635-462E-AAC2-74E4FE508A9B</string>
-</dict>
+    <dict>
+        <key>beforeRunningCommand</key>
+        <string>nop</string>
+        <key>command</key>
+        <string>#!/usr/bin/env ruby -w&#x0A;&#x0A;require ENV[&apos;TM_SUPPORT_PATH&apos;] + &quot;/lib/exit_codes.rb&quot;&#x0A;&#x0A;doc        = STDIN.read&#x0A;line       = ENV[&apos;TM_LINE_NUMBER&apos;].to_i&#x0A;line_index = ENV[&apos;TM_LINE_INDEX&apos;].to_i&#x0A;&#x0A;if ENV.has_key? &apos;TM_INPUT_START_LINE&apos; then&#x0A;  line       = ENV[&apos;TM_INPUT_START_LINE&apos;].to_i&#x0A;  line_index = ENV[&apos;TM_INPUT_START_LINE_INDEX&apos;].to_i&#x0A;end&#x0A;&#x0A;before = /(.*\n){#{line-1}}.{#{line_index}}/.match(doc)[0]&#x0A;&#x0A;# remove all self-closing tags&#x0A;before.gsub!(/&lt;(area|base|basefont|br|col|frame|hr|img|input|isindex|link|meta|param)\b[^&gt;]*&gt;|&lt;[^&gt;]+\/\s*&gt;/, &apos;&apos;) &#x0A;&#x0A;# remove all comments&#x0A;before.gsub!(/&lt;!--.*?--&gt;/m, &apos;&apos;)&#x0A;&#x0A;stack = [ ]&#x0A;before.scan(/&lt;\s*(\/)?\s*(\w[\w:-]*)[^&gt;]*&gt;/) do |m|&#x0A;  if m[0].nil? then&#x0A;    stack &lt;&lt; m[1]&#x0A;  else&#x0A;    until stack.empty? do&#x0A;      close_tag = stack.pop&#x0A;      break if close_tag == m[1]&#x0A;    end&#x0A;  end&#x0A;end&#x0A;&#x0A;if stack.empty? then&#x0A;  print &quot;\a&quot;  # Sound bell&#x0A;  TextMate.exit_discard&#x0A;else&#x0A;  print &quot;&lt;/#{stack.pop}&gt;&quot;&#x0A;end</string>
+        <key>input</key>
+        <string>document</string>
+        <key>keyEquivalent</key>
+        <string>~@.</string>
+        <key>name</key>
+        <string>Insert Close Tag</string>
+        <key>output</key>
+        <string>afterSelectedText</string>
+        <key>uuid</key>
+        <string>0658019F-3635-462E-AAC2-74E4FE508A9B</string>
+    </dict>
 </plist>
