@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>name</key>
+        <string>Find in project</string>
+        <key>uuid</key>
+        <string>9332D2FA-DFA1-4E05-A0B2-5B2B85312965</string>
+        <key>input</key>
+        <string>none</string>
+        <key>output</key>
+        <string>showAsHTML</string>
+        <key>command</key>
+        <string>#!/usr/bin/perl
+
+use strict;
+use File::Basename;
+
+my @res = `CocoaDialog inputbox --title Search --button1 search --text $ENV{&apos;TM_CURRENT_WORD&apos;} --no-newline`;
+my @find;
+my @selected_files = split(&quot;\&apos; \&apos;&quot;, $ENV{TM_SELECTED_FILES} );
+
+foreach(@selected_files){
+  $_ =~ s/\&apos;//g;
+  if (-d $_){
+    push(@find, `find \&quot;$_\&quot; -exec grep -li \&quot;$res[1]\&quot; {} \\; `);
+  }
+  elsif ( (-f &quot;$_&quot;) &amp;&amp; (`file \&quot;$_\&quot;` =~ /text/) ){
+    push(@find, `grep -li \&quot;$res[1]\&quot; \&quot;$_\&quot;`);
+  }
+}
+
+# Search the entire project hierarchy, in case nothing has been selected...
+if ($ENV{TM_SELECTED_FILES} eq &quot;&quot; ){
+  push(@find, `find \&quot;$ENV{&apos;TM_PROJECT_DIRECTORY&apos;}\&quot; -exec grep -li \&quot;$res[1]\&quot; {} \\;`);
+}
+
+my $basename;
+foreach (@find){
+  chomp($_);
+  $basename = basename($_);
+  print &quot;&lt;a href=\&quot;txmt://open/?url=file://$_\&quot;&gt;$basename&lt;/a&gt;&lt;br&gt;\n&quot;;
+}
+
+if (scalar @find == 0){
+  print &quot;\&quot;$res[1]\&quot; not found...&quot;;
+}
+
+</string>
+        <key>keyEquivalent</key>
+        <string>@^f</string>
+    </dict>
+</plist>
