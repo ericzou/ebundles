@@ -1,33 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>command</key>
-	<string>img="$TM_DROPPED_FILE"
-echo -n "&lt;img src=\"$img\" "
+    <dict>
+        <key>command</key>
+        <string>img=&quot;$TM_DROPPED_FILE&quot;
+echo -n &quot;&lt;img src=\&quot;$img\&quot; &quot;
 
-sips -g pixelWidth -g pixelHeight "$img" \
-|awk '/pixelWidth/  { printf("width=\"%d\" ",  $2) }
-      /pixelHeight/ { printf("height=\"%d\" ", $2) }'
+sips -g pixelWidth -g pixelHeight &quot;$img&quot; \
+|awk &apos;/pixelWidth/  { printf(&quot;width=\&quot;%d\&quot; &quot;,  $2) }
+      /pixelHeight/ { printf(&quot;height=\&quot;%d\&quot; &quot;, $2) }&apos;
 
-base=${img##*/}
-alt=$(tr &lt;&lt;&lt;${base%.*} '[_-]' ' '|perl -pe 's/(\w+)/\u$1/g')
-echo -n "alt=\"$alt\"${TM_XHTML}&gt;"
-</string>
-	<key>draggedFileExtensions</key>
-	<array>
-		<string>png</string>
-		<string>jpeg</string>
-		<string>jpg</string>
-		<string>gif</string>
-	</array>
-	<key>name</key>
-	<string>Insert Image With Dimensions</string>
-	<key>output</key>
-	<string>insertAsSnippet</string>
-	<key>scope</key>
-	<string>text.html</string>
-	<key>uuid</key>
-	<string>CD6D2CC6-6B33-11D9-BDFD-000D93589AF6</string>
-</dict>
+alt=`echo $img|perl -MFile::Basename -ne &apos;print basename $_&apos; | perl -pe &apos;s/(\w+).*/\u$1/&apos;` 
+
+echo -n &quot;alt=\&quot;$alt\&quot;${TM_XHTML}&gt;&quot;</string>
+        <key>draggedFileExtensions</key>
+        <array>
+            <string>png</string>
+            <string>jpeg</string>
+            <string>jpg</string>
+            <string>gif</string>
+        </array>
+        <key>name</key>
+        <string>Insert Image With Dimensions</string>
+        <key>output</key>
+        <string>insertAsSnippet</string>
+        <key>scope</key>
+        <string>text.html</string>
+        <key>uuid</key>
+        <string>CD6D2CC6-6B33-11D9-BDFD-000D93589AF6</string>
+    </dict>
 </plist>
