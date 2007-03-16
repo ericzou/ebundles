@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>name</key>
+        <string>Insert color</string>
+        <key>uuid</key>
+        <string>78D426C8-822B-41A7-B269-A08FCED4D0A0</string>
+        <key>input</key>
+        <string>none</string>
+        <key>output</key>
+        <string>replaceSelectedText</string>
+        <key>command</key>
+        <string>CocoaDialog.exe colorselect --title &quot;Insert Color&quot; --colour &quot;$TM_CURRENT_WORD&quot;  --no-newline</string>
+        <key>keyEquivalent</key>
+        <string>@C</string>
+    </dict>
+</plist>
