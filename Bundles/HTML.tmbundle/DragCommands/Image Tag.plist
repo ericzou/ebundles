@@ -3,16 +3,19 @@
 <plist version="1.0">
     <dict>
         <key>command</key>
-        <string>img=&quot;$TM_DROPPED_FILE&quot;
-echo -n &quot;&lt;img src=\&quot;$img\&quot; &quot;
+        <string>#!/usr/bin/env ruby
 
-sips -g pixelWidth -g pixelHeight &quot;$img&quot; \
-|awk &apos;/pixelWidth/  { printf(&quot;width=\&quot;%d\&quot; &quot;,  $2) }
-      /pixelHeight/ { printf(&quot;height=\&quot;%d\&quot; &quot;, $2) }&apos;
+if File.exists?(ENV[&apos;TM_BUNDLE_SUPPORT&apos;] + &quot;/bin/sips&quot;)
+  SIPS = ENV[&apos;TM_BUNDLE_SUPPORT&apos;] + &quot;/bin/sips&quot;
+else
+  SIPS = &quot;sips&quot;
+end
 
-alt=`echo $img|perl -MFile::Basename -ne &apos;print basename $_&apos; | perl -pe &apos;s/(\w+).*/\u$1/&apos;` 
-
-echo -n &quot;alt=\&quot;$alt\&quot;${TM_XHTML}&gt;&quot;</string>
+imgsrc = `cygpath -m \&quot;#{ENV[&apos;TM_DROPPED_FILEPATH&apos;]}\&quot;`.chomp
+imgdims = `\&apos;#{SIPS}\&apos; -g pixelWidth -g pixelHeight \&apos;#{imgsrc}\&apos;`
+imgdims = imgdims.split(&quot;\n&quot;).collect { |dim| dim.gsub(/\D/,&quot;&quot;) }
+alt = File.basename(imgsrc, &quot;.*&quot;).gsub(&quot;\\&quot;,&quot;&quot;)
+print &quot;&lt;img src=\&quot;#{ENV[&apos;TM_DROPPED_FILE&apos;]}\&quot; width=\&quot;#{imgdims[0]}\&quot; height=\&quot;#{imgdims[1]}\&quot; alt=\&quot;#{alt}\&quot; title=\&quot;#{alt}\&quot;#{ENV[&apos;TM_XHTML&apos;]}&gt;&quot;</string>
         <key>draggedFileExtensions</key>
         <array>
             <string>png</string>
