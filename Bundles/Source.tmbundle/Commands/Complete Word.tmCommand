@@ -7,7 +7,7 @@
         <key>uuid</key>
         <string>8FB086F3-41E1-433D-9ED5-94C1863526D8</string>
         <key>input</key>
-        <string>selection</string>
+        <string>document</string>
         <key>output</key>
         <string>afterSelectedText</string>
         <key>command</key>
@@ -16,6 +16,8 @@
 SUPPORT  = ENV[&apos;TM_SUPPORT_PATH&apos;]
 DIALOG   = SUPPORT + &apos;/bin/CocoaDialog.exe&apos;
 selected_word = ENV[&apos;TM_CURRENT_WORD&apos;]
+x = &quot;--xpos #{ENV[&apos;TM_CARET_XPOS&apos;]} &quot;
+y = &quot;--ypos #{ENV[&apos;TM_CARET_YPOS&apos;]} &quot;
 
 if selected_word != nil
   menu      = []
@@ -34,7 +36,7 @@ if selected_word != nil
   elsif menu.length == 1
     print menu[0].sub(selected_word, &apos;&apos;).strip
   else
-    selected = `\&quot;#{DIALOG}\&quot; menu --items #{menu}`.to_i - 1
+    selected = %x`&quot;#{DIALOG}&quot; menu --items #{menu} #{x} #{y}`.to_i - 1
     print menu[selected].sub(selected_word, &apos;&apos;).strip
   end
 end</string>
