@@ -3,7 +3,8 @@
 <plist version="1.0">
     <dict>
         <key>command</key>
-        <string>s=$TM_SUPPORT_PATH
+        <string>export LC_CTYPE=en_US.UTF-8
+s=$TM_SUPPORT_PATH
 BUNDLES=${s%Support}&quot;Bundles/local&quot;
 
 cd $BUNDLES

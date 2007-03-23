@@ -3,7 +3,8 @@
 <plist version="1.0">
     <dict>
         <key>command</key>
-        <string>s=$TM_SUPPORT_PATH
+        <string>export LC_CTYPE=en_US.UTF-8
+s=$TM_SUPPORT_PATH
 BUNDLES=${s%Support}&quot;Bundles/local&quot;
 
 bundlelist (){ 
@@ -28,7 +29,13 @@ fi
 mkdir -p $BUNDLES
 cd $BUNDLES
 
-svn --username anon --password anon co http://macromates.com/svn/Bundles/trunk/Bundles/${bu}.tmbundle --no-auth-cache --non-interactive</string>
+svn checkout http://ebundles.googlecode.com/svn/trunk/Bundles/${bu}.tmbundle
+if [[ $? == 0 ]];
+then
+	echo &apos;&apos;
+else	
+	svn --username anon --password anon co http://macromates.com/svn/Bundles/trunk/Bundles/${bu}.tmbundle --no-auth-cache --non-interactive
+fi</string>
         <key>input</key>
         <string>none</string>
         <key>name</key>
