@@ -13,7 +13,7 @@ module KeyChain
       site_passwords = []
       site_passwords = open(PASS_FILE) {|f| YAML.load(f) } if File.exists?(PASS_FILE)
       site_passwords.each_with_index do |arr, index|
-        if (arr[:host] == host &&arr[:user] == user && arr[:path] == path && arr[:proto] == proto) then
+        if (arr[:host] == host && arr[:user] == user && arr[:path] == path && arr[:proto] == proto) then
           site_passwords[index] = {:user => user, :host => host, :proto => proto, :path => path, :pass => pass}
           open(PASS_FILE, 'w') {|f| YAML.dump(site_passwords, f)}
           return
