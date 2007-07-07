@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>name</key>
+        <string>Firefox preview</string>
+        <key>uuid</key>
+        <string>0BEDA38A-5795-4BC2-88B0-52707EEEBDDA</string>
+        <key>input</key>
+        <string>none</string>
+        <key>output</key>
+        <string>discard</string>
+        <key>command</key>
+        <string>#!/usr/bin/env ruby
+require &apos;socket&apos;
+$jssh_socket = TCPSocket::new(&quot;localhost&quot;, 9997);
+$jssh_socket.puts(&quot;getWindows()[0].getBrowser().reload()&quot;);
+$jssh_socket.close;
+
+</string>
+        <key>keyEquivalent</key>
+        <string>@R</string>
+        <key>scope</key>
+        <string>text.html, source.css</string>
+    </dict>
+</plist>
