@@ -5,7 +5,7 @@
 	<key>content</key>
 	<string>function($1) {${0:$TM_SELECTED_TEXT}};</string>
 	<key>name</key>
-	<string>function(){};</string>
+	<string>Anonymous Function</string>
 	<key>scope</key>
 	<string>source.js</string>
 	<key>tabTrigger</key>

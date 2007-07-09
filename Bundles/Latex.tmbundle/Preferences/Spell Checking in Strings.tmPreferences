@@ -2,17 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>content</key>
-	<string>\\[
-	$0
-\\]</string>
-	<key>keyEquivalent</key>
-	<string>^[</string>
 	<key>name</key>
-	<string>Unnumbered Equation</string>
+	<string>Spell Checking in Strings</string>
 	<key>scope</key>
-	<string>text.tex.latex</string>
+	<string>text.tex string.quoted</string>
+	<key>settings</key>
+	<dict>
+		<key>spellChecking</key>
+		<integer>1</integer>
+	</dict>
 	<key>uuid</key>
-	<string>7F7578B0-58F3-44B3-9278-1CBEA9C58208</string>
+	<string>C6B468AE-5BD0-48D1-9D54-F4D09C42C505</string>
 </dict>
 </plist>

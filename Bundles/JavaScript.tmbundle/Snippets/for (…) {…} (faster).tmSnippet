@@ -3,17 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>\begin{cases}
-	${1:equation}, &amp;\text{ if }${2:case}\\\\
-	$0
-\end{cases}</string>
+	<string>for (var ${20:i} = ${1:Things}.length - 1; ${20:i} &gt;= 0; ${20:i}--){
+	${100:${1:Things}[${20:i}]}$0
+};</string>
 	<key>name</key>
-	<string>Cases</string>
+	<string>for (…) {…} (Improved Native For-Loop)</string>
 	<key>scope</key>
-	<string>text.tex.latex</string>
+	<string>source.js</string>
 	<key>tabTrigger</key>
-	<string>cas</string>
+	<string>for</string>
 	<key>uuid</key>
-	<string>EE7D14B5-9620-4A1B-866B-91E26FB481DB</string>
+	<string>C207B7C3-5597-4873-8AAD-C46FB8842AF2</string>
 </dict>
 </plist>

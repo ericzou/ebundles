@@ -3,16 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>\\[
-	$0
-\\]</string>
-	<key>keyEquivalent</key>
-	<string>^[</string>
+	<string>/*!
+ * $0
+ */</string>
 	<key>name</key>
-	<string>Unnumbered Equation</string>
+	<string>/*! … */</string>
 	<key>scope</key>
-	<string>text.tex.latex</string>
+	<string>source.c, source.objc, source.c++, source.objc++</string>
+	<key>tabTrigger</key>
+	<string>/*!</string>
 	<key>uuid</key>
-	<string>7F7578B0-58F3-44B3-9278-1CBEA9C58208</string>
+	<string>97624253-06BA-4D4E-AFD8-EFC24E4710A7</string>
 </dict>
 </plist>
