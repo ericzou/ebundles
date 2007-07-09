@@ -20,6 +20,8 @@
 	<string>(?x)
 		(&lt;(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|form|dl)\b.*?&gt;
 		|&lt;!--(?!.*--\s*&gt;)
+		|^&lt;!--\ \#tminclude\ (?&gt;.*?--&gt;)$
+		|&lt;\?(?:php)?.*\b(if|for(each)?|while)\b.+:
 		|\{\{?(if|foreach|capture|literal|foreach|php|section|strip)
 		|\{\s*($|\?&gt;\s*$|//|/\*(.*\*/\s*$|(?!.*?\*/)))
 		)</string>
@@ -27,6 +29,8 @@
 	<string>(?x)
 		(&lt;/(?i:head|body|table|thead|tbody|tfoot|tr|div|select|fieldset|style|script|ul|ol|form|dl)&gt;
 		|^(?!.*?&lt;!--).*?--\s*&gt;
+		|^&lt;!--\ end\ tminclude\ --&gt;$
+		|&lt;\?(?:php)?.*\bend(if|for(each)?|while)\b
 		|\{\{?/(if|foreach|capture|literal|foreach|php|section|strip)
 		|^[^{]*\}
 		)</string>
@@ -146,6 +150,10 @@
 					<key>name</key>
 					<string>invalid.illegal.bad-comments-or-CDATA.html</string>
 				</dict>
+				<dict>
+					<key>include</key>
+					<string>#embedded-code</string>
+				</dict>
 			</array>
 		</dict>
 		<dict>
@@ -208,19 +216,7 @@
 		</dict>
 		<dict>
 			<key>include</key>
-			<string>#python</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#php</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#ruby</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#smarty</string>
+			<string>#embedded-code</string>
 		</dict>
 		<dict>
 			<key>begin</key>
@@ -363,6 +359,10 @@
 							<string>\*/|(?=&lt;/script)</string>
 							<key>name</key>
 							<string>comment.block.js</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#php</string>
 						</dict>
 						<dict>
 							<key>include</key>
@@ -509,11 +509,11 @@
 			<array>
 				<dict>
 					<key>include</key>
-					<string>#php</string>
+					<string>#ruby</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#ruby</string>
+					<string>#php</string>
 				</dict>
 				<dict>
 					<key>include</key>
@@ -560,6 +560,20 @@
 		<dict>
 			<key>patterns</key>
 			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>source.php.embedded.line.empty.whitespace.html</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>&lt;\?(?i:php|=)?(\s*\?)&gt;</string>
+					<key>name</key>
+					<string>source.php.embedded.line.empty.html</string>
+				</dict>
 				<dict>
 					<key>applyEndPatternLast</key>
 					<integer>1</integer>
@@ -664,6 +678,43 @@
 							<string>(#).*?(?=-?%&gt;)</string>
 							<key>name</key>
 							<string>comment.line.number-sign.ruby</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>source.ruby</string>
+						</dict>
+					</array>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>&lt;\?r(?!&gt;)=?</string>
+					<key>captures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.section.embedded.ruby.nitro</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>-?\?&gt;</string>
+					<key>name</key>
+					<string>source.ruby.nitro.embedded.html</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>captures</key>
+							<dict>
+								<key>1</key>
+								<dict>
+									<key>name</key>
+									<string>punctuation.definition.comment.ruby.nitro</string>
+								</dict>
+							</dict>
+							<key>match</key>
+							<string>(#).*?(?=-?\?&gt;)</string>
+							<key>name</key>
+							<string>comment.line.number-sign.ruby.nitro</string>
 						</dict>
 						<dict>
 							<key>include</key>
