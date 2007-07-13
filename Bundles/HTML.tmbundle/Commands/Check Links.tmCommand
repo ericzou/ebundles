@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>name</key>
+        <string>Check Links</string>
+        <key>uuid</key>
+        <string>A92F9113-04EF-48A6-99C7-EA7BA7467C1E</string>
+        <key>input</key>
+        <string>none</string>
+        <key>output</key>
+        <string>showAsHTML</string>
+        <key>command</key>
+        <string># just to remind you of some useful environment variables
+
+echo File: &quot;$TM_FILEPATH&quot;
+echo Word: &quot;$TM_CURRENT_WORD&quot;
+echo Selection: &quot;$TM_SELECTED_TEXT&quot;</string>
+        <key>winCommand</key>
+        <string>#!C:\Python25\pythonw.exe
+
+import os
+import re
+
+class link_finder():
+    regexs = []
+    exc_regexs= []
+    links = []
+    cur_file = &quot;&quot;
+    doc_root = &quot;&quot;
+
+
+
+    def __init__(self):
+
+        regexs = [
+            &apos;(?&lt;=href=&quot;)[A-Za-z0-9_:/.-]*(?=&quot;)&apos;, #href
+            &apos;(?&lt;=src=&quot;)[A-Za-z0-9_:/.-]*(?=&quot;)&apos;,  #src
+            &apos;(?&lt;=url\()[A-Za-z0-9_:/.-]*(?=\))&apos;  #url
+            ]
+
+        for regex in regexs:
+            self.regexs.append(re.compile(regex))
+            
+
+      
+    def get_links(self,txt):
+        line_num = 0
+        
+        for line in txt:
+            line_num += 1
+
+            for regex in self.regexs:
+                for match in regex.findall(line):
+                    if match[0:7] != &quot;mailto:&quot; and match[0:7] != &quot;http://&quot;and match[0:1] != &quot;#&quot;:             # pretty horrible, exclusion regex?
+                        self.links.append((match,line_num))
+
+                        
+class link_checker():
+
+    ext_to_check = [&quot;htm&quot;,&quot;html&quot;,&quot;css&quot;]
+    root = &quot;&quot;
+    current_file = &quot;&quot;
+    
+    files_to_check = []
+    files = []
+    orphans = []
+
+
+    errors = []
+
+    valid_links = []
+    broken_links = {}
+    num_broken_links = 0
+    
+    def get_file_list(self):
+        os.chdir(self.root)
+                
+        for dirpath,dirnames,filenames in os.walk(os.curdir):
+            for this_file in filenames:
+                
+                this_path = os.path.normpath(os.path.join(self.root,dirpath,this_file))
+                self.files.append(this_path)
+                
+                try:
+                    this_ext =  this_file.rsplit(&quot;.&quot;,1)[1]
+                    
+                    if this_ext in self.ext_to_check:    
+                        self.files_to_check.append(this_path)
+                        
+                except IndexError,e:
+                    self.errors.append(&quot;IndexError &quot; + this_path)
+                    
+    def get_broken_links(self):
+        my_link_finder = link_finder()
+        for this_file in self.files_to_check:
+           
+
+            my_link_finder.links = []
+            my_link_finder.doc_root =  os.path.split(this_file.replace(&quot;\\&quot;,&quot;\\\\&quot;))[0]
+            my_link_finder.cur_file = this_file
+            
+            f = open(this_file,&quot;U&quot;)
+            my_link_finder.get_links(f.readlines())
+
+
+            for link,line in my_link_finder.links:
+                link_path =  os.path.normpath(os.path.join(my_link_finder.doc_root,link))
+
+                if link_path not in self.valid_links:
+                    
+                    if link_path not in self.files:
+                        self.num_broken_links += 1
+
+                        if self.broken_links.has_key(my_link_finder.cur_file):
+                            self.broken_links[my_link_finder.cur_file].append([line,link_path])
+                        else:
+                            self.broken_links[my_link_finder.cur_file] = [[line,link_path],]
+                            
+                    else:
+                        self.valid_links.append(link_path)
+
+
+
+    def get_orphans(self):
+        for this_file in self.files:
+            if this_file not in my_link_checker.valid_links:
+                self.orphans.append(this_file)
+
+        
+    def textmate_link(self,host_file,link_path,line_number,link_text):
+        return &quot;&quot;.join((&apos;&lt;a href=&quot;txmt://open/?url=file://&apos;,host_file , &quot;&amp;amp;line=&quot; , str(line_number) , &apos;&quot;&gt;&apos;,link_text,&apos;&lt;/a&gt;&apos;))
+
+    def print_stats(self):
+        # yay for big ugly output functions ^.^
+        print &apos;&lt;html&gt;&lt;head&gt;&lt;meta http-equiv=&quot;Content-type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;&lt;title&gt;Link Checker&lt;/title&gt;&lt;style type=&quot;text/css&quot; media=&quot;screen&quot;&gt;*{font-size:0.95em;font-family:verdana;}div.borked{margin:0px 0px 0px 30px}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&apos;
+        print &apos;&lt;p&gt;&apos;
+        print len(self.files), &apos; files in project | &apos;
+        print len(self.files_to_check), &apos;files checked  | &apos;
+        print self.num_broken_links, &apos;broken links  | &apos;
+        print len(self.broken_links), &apos;files with broken links | &apos;
+        print len(self.orphans), &apos; orphaned files&lt;/p&gt;&apos;
+        
+        if self.num_broken_links &gt; 0 :
+            print &apos;&lt;h1&gt;Broken Links:&lt;/h1&gt;&apos;
+
+            for page in self.broken_links.keys():
+                print page,self.textmate_link(page,None,0,&quot;open&quot;)+&quot;&lt;br /&gt;&quot;
+                for link in self.broken_links[page]:
+                    print &apos;&lt;div class=&quot;borked&quot;&gt;&apos;,self.textmate_link(page,link[1],link[0],&quot;Line &quot; + str(link[0])),&apos; links to :&apos;,link[1], &quot;&lt;/div&gt;&quot;
+                    
+        if len(self.orphans) &gt; 0:
+            print &apos;&lt;p&gt;&lt;h2&gt;Orphaned Files:&lt;/h2&gt;&apos;
+            for orphan in self.orphans:
+                print &apos;&lt;div class=&quot;borked&quot;&gt;&apos;,orphan,&apos;&lt;/div&gt;&apos;
+            print &apos;&lt;/p&gt;&apos;
+            
+        if len(self.errors) &gt; 0:
+            print &apos;&lt;p&gt;&lt;h2&gt;Errors:&lt;/h2&gt;&apos;
+            for error in self.errors:
+                print &apos;&lt;div class=&quot;borked&quot;&gt;&apos;,error,&apos;&lt;/div&gt;&apos;
+            print &apos;&lt;/p&gt;&apos;
+
+        if (len(self.errors) + len(self.orphans) + self.num_broken_links)  == 0:
+            print &quot;&lt;h1&gt;well done ;)&lt;/h1&gt;&quot;
+            
+        print &quot;&lt;p&gt;--&lt;br&gt;sjh&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;
+
+    def __init__(self,root):
+        self.root = root
+        
+
+    def e_output(self):
+        self.get_file_list()
+        self.get_broken_links()
+        self.get_orphans()
+        self.print_stats()
+
+
+import profile
+
+project =  os.environ.get(&apos;TM_PROJECT_DIRECTORY&apos;)
+
+if project:
+	my_link_checker = link_checker(project)
+	#profile.run(&apos;my_link_checker.e_output()&apos;)
+	my_link_checker.e_output()
+else:
+	print &quot;No project open&quot;
+</string>
+        <key>runEnvironment</key>
+        <string>windows</string>
+        <key>keyEquivalent</key>
+        <string>^C</string>
+    </dict>
+</plist>
