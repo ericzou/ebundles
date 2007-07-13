@@ -19,25 +19,34 @@
 			<string>address</string>
 			<string>area</string>
 			<string>b</string>
+			<string>background</string>
 			<string>base</string>
 			<string>big</string>
 			<string>blockquote</string>
 			<string>body</string>
+			<string>border</string>
 			<string>br</string>
 			<string>button</string>
 			<string>caption</string>
+			<string>clear</string>
 			<string>cite</string>
 			<string>code</string>
 			<string>col</string>
+			<string>color</string>
 			<string>colgroup</string>
+			<string>cursor</string>
 			<string>dd</string>
 			<string>del</string>
 			<string>dfn</string>
+			<string>direction</string>
+			<string>display</string>
 			<string>div</string>
 			<string>dl</string>
 			<string>dt</string>
 			<string>em</string>
 			<string>fieldset</string>
+			<string>float</string>
+			<string>font</string>
 			<string>form</string>
 			<string>frame</string>
 			<string>frameset</string>
@@ -58,9 +67,13 @@
 			<string>kbd</string>
 			<string>label</string>
 			<string>legend</string>
+			<string>letter</string>
 			<string>li</string>
 			<string>link</string>
+			<string>list</string>
 			<string>map</string>
+			<string>margin</string>
+			<string>marker</string>
 			<string>meta</string>
 			<string>noframes</string>
 			<string>noscript</string>
@@ -68,8 +81,11 @@
 			<string>ol</string>
 			<string>optgroup</string>
 			<string>option</string>
+			<string>overflow</string>
 			<string>p</string>
+			<string>padding</string>
 			<string>param</string>
+			<string>position</string>
 			<string>pre</string>
 			<string>q</string>
 			<string>samp</string>
@@ -85,6 +101,7 @@
 			<string>table</string>
 			<string>tbody</string>
 			<string>td</string>
+			<string>text</string>
 			<string>textarea</string>
 			<string>tfoot</string>
 			<string>th</string>
@@ -94,6 +111,10 @@
 			<string>tt</string>
 			<string>ul</string>
 			<string>var</string>
+			<string>vertical</string>
+			<string>visibility</string>
+			<string>white</string>
+			<string>word</string>
 		</array>
 	</dict>
 	<key>uuid</key>
