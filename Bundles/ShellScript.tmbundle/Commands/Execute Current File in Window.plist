@@ -7,7 +7,26 @@
         <key>beforeRunningCommand</key>
         <string>saveActiveFile</string>
         <key>command</key>
-        <string>. &quot;$TM_SUPPORT_PATH/lib/webpreview.sh&quot;&#x0A;html_header &quot;Run ${TM_FILENAME}&quot;&#x0A;&#x0A;if [ ! -x &quot;$TM_FILEPATH&quot; ]; then&#x0A;&#x0A;#   res=$(iconv &lt;&lt;APPLESCRIPT -f utf-8 -t mac|osascript 2&gt;/dev/null&#x0A;#   tell app &quot;TextMate&quot; to return button returned of ¬&#x0A;#     (display dialog &quot;To run “${TM_FILENAME}” as a shell script it needs to be executable.\n\nWould you like to make it executable?&quot; ¬&#x0A;#       buttons {&quot;Cancel&quot;, &quot;Make Executable&quot;} ¬&#x0A;#       with icon 1 default button 2)&#x0A;# APPLESCRIPT)&#x0A;&#x0A;# if [[ &quot;$res&quot; != &quot;Make Executable&quot; ]]; then echo &apos;&lt;script&gt;window.close()&lt;/script&gt;&apos;; abort; exit; fi&#x0A;  chmod a+x &quot;$TM_FILEPATH&quot;&#x0A;fi&#x0A;&#x0A;&quot;$TM_FILEPATH&quot;|pre&#x0A;echo &quot;Program exited with status $?.&quot;&#x0A;html_footer</string>
+        <string>. "$TM_SUPPORT_PATH/lib/webpreview.sh"
+        	html_header "Run ‘${TM_FILENAME}’"
+        	
+        	if [ ! -x "$TM_FILEPATH" ]; then
+        	
+        	#   res=$(iconv &lt;&lt;APPLESCRIPT -f utf-8 -t mac|osascript 2&gt;/dev/null
+        	#   tell app "TextMate" to return button returned of ¬
+        	#     (display dialog "To run “${TM_FILENAME}” as a shell script it needs to be executable.\n\nWould you like to make it executable?" ¬
+        	#       buttons {"Cancel", "Make Executable"} ¬
+        	#       with icon 1 default button 2)
+        	# APPLESCRIPT)
+        	
+        	# if [[ "$res" != "Make Executable" ]]; then echo '&lt;script&gt;window.close()&lt;/script&gt;'; abort; exit; fi
+        	  chmod a+x "$TM_FILEPATH"
+        	fi
+        	
+        	"$TM_FILEPATH"|pre
+        	echo "Program exited with status $?."
+        	html_footer
+        	</string>
         <key>input</key>
         <string>none</string>
         <key>keyEquivalent</key>
@@ -21,6 +40,21 @@
         <key>uuid</key>
         <string>7207ACC2-A64B-11D9-B384-000D93382786</string>
         <key>winCommand</key>
-        <string>. &quot;$TM_SUPPORT_PATH/lib/webpreview.sh&quot;&#x0A;html_header &quot;Run &apos;${TM_FILENAME}&apos;&quot;&#x0A;&#x0A;if [ ! -x &quot;$TM_FILEPATH&quot; ]; then&#x0A;  CD=&quot;$TM_SUPPORT_PATH/bin/CocoaDialog&quot;&#x0A;&#x0A;  rv=`&quot;$CD&quot; yesno-msgbox --no-cancel --no-newline \&#x0A;      --text  &quot;File not executable&quot; \&#x0A;      --informative-text &quot;To run &apos;${TM_FILENAME}&apos; as a shell script it needs to be executable.  Would you like to make it executable?&quot;`&#x0A;  if [ &quot;$rv&quot; == &quot;2&quot; ]; then abort; exit; fi&#x0A;  chmod a+x &quot;$TM_FILEPATH&quot;&#x0A;fi&#x0A;&#x0A;&quot;$TM_FILEPATH&quot;|pre&#x0A;echo &quot;Program exited with status $?.&quot;&#x0A;html_footer</string>
+        <string>. "$TM_SUPPORT_PATH/lib/webpreview.sh"
+        	html_header "Run '${TM_FILENAME}'"
+        	
+        	if [ ! -x "$TM_FILEPATH" ]; then
+        	  CD="$TM_SUPPORT_PATH/bin/CocoaDialog"
+        	
+        	  rv=`"$CD" yesno-msgbox --no-cancel --no-newline \
+        	      --text  "File not executable" \
+        	      --informative-text "To run '${TM_FILENAME}' as a shell script it needs to be executable.  Would you like to make it executable?"`
+        	  if [ "$rv" == "2" ]; then abort; exit; fi
+        	  chmod a+x "$TM_FILEPATH"
+        	fi
+        	
+        	"$TM_FILEPATH"|pre
+        	echo "Program exited with status $?."
+        	html_footer</string>
     </dict>
 </plist>
