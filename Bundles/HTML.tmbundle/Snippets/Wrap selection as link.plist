@@ -3,14 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>&lt;a href="${1:`
-   # if the clipboard contains a single line, let’s use that
-   export __CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100
-   if [[ $(pbpaste|wc -l) -eq 0 ]]
-      then pbpaste|perl -pe 's/&amp;(?!([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+);)/&amp;amp;/g'
-      else echo http://site.com/
-   fi
-`}"&gt;${TM_SELECTED_TEXT:Link text...}&lt;/a&gt;</string>
+	<string>&lt;a href=&quot;${1:`
+  # if the clipboard contains a single line, let&apos;s use that
+  export __CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100
+  if [[ $(pbpaste|wc -l) -eq 0 ]]
+     then pbpaste|perl -pe
+&apos;s/&amp;(?!([a-zA-Z0-9]+|#[0-9]+|#x[0-9a-fA-F]+);)/&amp;amp;/g&apos;
+     else echo http://site.com/
+  fi
+`}&quot;&gt;${2:${TM_SELECTED_TEXT:Link text...}}&lt;/a&gt;</string>
 	<key>keyEquivalent</key>
 	<string>^L</string>
 	<key>name</key>
