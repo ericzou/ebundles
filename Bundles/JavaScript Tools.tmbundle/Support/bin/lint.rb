@@ -26,10 +26,8 @@ output  = output.map do |chunk|
   j = 0
   lines = lines.map do |line|
     if line =~ /^(\d+):/
-      column = (lines[j+2].rindex("^") + 1).to_s
-      line.gsub!(/^(\d+):/, '<a href="txmt://open?url=file://#{FILEPATH}&line=\1&column=#{column}">\1</a>')
-      # TODO: figure out why I can't use bracketed expressions and 
-      #       regexp captures within the same string
+      column = (lines[j+2].rindex("^") + 1).to_s rescue ''
+      line.gsub!(/^(\d+):/, %{<a href="txmt://open?url=file://#{FILEPATH}&line=\\1&column=#{column}">\\1</a>})
       line.gsub!('#{column}', column);
       line.gsub!('#{FILEPATH}', FILEPATH);
     end
