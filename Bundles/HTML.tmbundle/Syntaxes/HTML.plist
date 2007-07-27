@@ -8,6 +8,8 @@
 		<string>htm</string>
 		<string>shtml</string>
 		<string>xhtml</string>
+		<string>phtml</string>
+		<string>php</string>
 		<string>inc</string>
 		<string>tmpl</string>
 		<string>tpl</string>
