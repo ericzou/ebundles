@@ -88,7 +88,7 @@ require_cmd "$TEX" "You can set the &lt;tt&gt;PATH&lt;/tt&gt; variable to includ
 tex_command () {
 if [ "$TEX" != latexmk.pl ]
 #  then echo "'$TEX' ${TM_LATEX_OPTIONS:=-interaction=nonstopmode -file-line-error-style}"
-  then echo "'$TEX' ${TM_LATEX_OPTIONS:=-p}"
+  then echo "'$TEX' ${TM_LATEX_OPTIONS:=-interaction=nonstopmode}"
   else
     if [[ "$TM_LATEX_PROGRAM" == latex ]]
       then

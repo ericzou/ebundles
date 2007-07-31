@@ -1,1 +1,1 @@
-$latex = 'pdflatex -interaction=nonstopmode -file-line-error-style ';
+$latex = 'pdflatex -interaction=nonstopmode ';
