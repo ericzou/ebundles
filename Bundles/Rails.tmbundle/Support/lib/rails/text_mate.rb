@@ -73,7 +73,7 @@ module TextMate
     # TODO: Move cocoa dialog stuff to its own class or module
     
     def cocoa_dialog_command
-      "#{support_path}/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog"
+      "#{support_path}/bin/CocoaDialog.exe"
     end
     
     # See http://cocoadialog.sourceforge.net/documentation.html for documentation
