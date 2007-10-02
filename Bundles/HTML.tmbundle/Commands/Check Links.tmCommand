@@ -11,32 +11,32 @@
         <key>output</key>
         <string>showAsHTML</string>
         <key>command</key>
-        <string># just to remind you of some useful environment variables
+        <string>#!/usr/bin/python
 
-echo File: &quot;$TM_FILEPATH&quot;
-echo Word: &quot;$TM_CURRENT_WORD&quot;
-echo Selection: &quot;$TM_SELECTED_TEXT&quot;</string>
-        <key>winCommand</key>
-        <string>#!C:\Python25\pythonw.exe
+# Link checker, modified for the e-text editor
+# this and other scripts i have made to aid 
+# my web-development at foo-fu.co.uk
 
 import os
 import re
 
 class link_finder():
     regexs = []
-    exc_regexs= []
     links = []
-    cur_file = &quot;&quot;
-    doc_root = &quot;&quot;
+    cur_file = ""
+    doc_root = ""
 
 
 
     def __init__(self):
 
         regexs = [
-            &apos;(?&lt;=href=&quot;)[A-Za-z0-9_:/.-]*(?=&quot;)&apos;, #href
-            &apos;(?&lt;=src=&quot;)[A-Za-z0-9_:/.-]*(?=&quot;)&apos;,  #src
-            &apos;(?&lt;=url\()[A-Za-z0-9_:/.-]*(?=\))&apos;  #url
+            '(?&lt;=href=")[A-Za-z0-9_:/.-]*(?=")', #a href
+            '(?&lt;=src=")[A-Za-z0-9_:/.-]*(?=")',  #img src
+            '(?&lt;=url\()[A-Za-z0-9_:/.-]*(?=\))'  #css url
+            '(?&lt;=import\()[A-Za-z0-9_:/.-]*(?=\))'  #css import
+            '(?&lt;=require\()[A-Za-z0-9_:/.-]*(?=\))'  #php require
+            '(?&lt;=include\()[A-Za-z0-9_:/.-]*(?=\))'  #php include
             ]
 
         for regex in regexs:
@@ -52,15 +52,16 @@ class link_finder():
 
             for regex in self.regexs:
                 for match in regex.findall(line):
-                    if match[0:7] != &quot;mailto:&quot; and match[0:7] != &quot;http://&quot;and match[0:1] != &quot;#&quot;:             # pretty horrible, exclusion regex?
+                    if match[0:7] != "mailto:" and match[0:7] != "http://"and match[0:1] != "#": 
+                        match = match.split("#")[0]
                         self.links.append((match,line_num))
-
+						
                         
 class link_checker():
 
-    ext_to_check = [&quot;htm&quot;,&quot;html&quot;,&quot;css&quot;]
-    root = &quot;&quot;
-    current_file = &quot;&quot;
+    ext_to_check = ["htm","html","css","php"]
+    root = ""
+    current_file = ""
     
     files_to_check = []
     files = []
@@ -83,13 +84,13 @@ class link_checker():
                 self.files.append(this_path)
                 
                 try:
-                    this_ext =  this_file.rsplit(&quot;.&quot;,1)[1]
+                    this_ext =  this_file.rsplit(".",1)[1]
                     
                     if this_ext in self.ext_to_check:    
                         self.files_to_check.append(this_path)
                         
                 except IndexError,e:
-                    self.errors.append(&quot;IndexError &quot; + this_path)
+                    self.errors.append("IndexError " + this_path)
                     
     def get_broken_links(self):
         my_link_finder = link_finder()
@@ -97,10 +98,10 @@ class link_checker():
            
 
             my_link_finder.links = []
-            my_link_finder.doc_root =  os.path.split(this_file.replace(&quot;\\&quot;,&quot;\\\\&quot;))[0]
+            my_link_finder.doc_root =  os.path.split(this_file.replace("\\","\\\\"))[0]
             my_link_finder.cur_file = this_file
             
-            f = open(this_file,&quot;U&quot;)
+            f = open(this_file,"U")
             my_link_finder.get_links(f.readlines())
 
 
@@ -129,42 +130,42 @@ class link_checker():
 
         
     def textmate_link(self,host_file,link_path,line_number,link_text):
-        return &quot;&quot;.join((&apos;&lt;a href=&quot;txmt://open/?url=file://&apos;,host_file , &quot;&amp;amp;line=&quot; , str(line_number) , &apos;&quot;&gt;&apos;,link_text,&apos;&lt;/a&gt;&apos;))
+        return "".join(('&lt;a href="txmt://open/?url=file://',host_file , "&amp;amp;line=" , str(line_number) , '"&gt;',link_text,'&lt;/a&gt;'))
 
     def print_stats(self):
         # yay for big ugly output functions ^.^
-        print &apos;&lt;html&gt;&lt;head&gt;&lt;meta http-equiv=&quot;Content-type&quot; content=&quot;text/html; charset=utf-8&quot; /&gt;&lt;title&gt;Link Checker&lt;/title&gt;&lt;style type=&quot;text/css&quot; media=&quot;screen&quot;&gt;*{font-size:0.95em;font-family:verdana;}div.borked{margin:0px 0px 0px 30px}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;&apos;
-        print &apos;&lt;p&gt;&apos;
-        print len(self.files), &apos; files in project | &apos;
-        print len(self.files_to_check), &apos;files checked  | &apos;
-        print self.num_broken_links, &apos;broken links  | &apos;
-        print len(self.broken_links), &apos;files with broken links | &apos;
-        print len(self.orphans), &apos; orphaned files&lt;/p&gt;&apos;
+        print '&lt;html&gt;&lt;head&gt;&lt;meta http-equiv="Content-type" content="text/html; charset=utf-8" /&gt;&lt;title&gt;Link Checker&lt;/title&gt;&lt;style type="text/css" media="screen"&gt;*{font-size:0.95em;font-family:verdana;}div.borked{margin:0px 0px 0px 30px}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;'
+        print '&lt;p&gt;'
+        print len(self.files), ' files in project | '
+        print len(self.files_to_check), 'files checked  | '
+        print self.num_broken_links, 'broken links  | '
+        print len(self.broken_links), 'files with broken links | '
+        print len(self.orphans), ' orphaned files&lt;/p&gt;'
         
         if self.num_broken_links &gt; 0 :
-            print &apos;&lt;h1&gt;Broken Links:&lt;/h1&gt;&apos;
+            print '&lt;h1&gt;Broken Links:&lt;/h1&gt;'
 
             for page in self.broken_links.keys():
-                print page,self.textmate_link(page,None,0,&quot;open&quot;)+&quot;&lt;br /&gt;&quot;
+                print page,self.textmate_link(page,None,0,"open")+"&lt;br /&gt;"
                 for link in self.broken_links[page]:
-                    print &apos;&lt;div class=&quot;borked&quot;&gt;&apos;,self.textmate_link(page,link[1],link[0],&quot;Line &quot; + str(link[0])),&apos; links to :&apos;,link[1], &quot;&lt;/div&gt;&quot;
+                    print '&lt;div class="borked"&gt;',self.textmate_link(page,link[1],link[0],"Line " + str(link[0])),' links to :',link[1], "&lt;/div&gt;"
                     
         if len(self.orphans) &gt; 0:
-            print &apos;&lt;p&gt;&lt;h2&gt;Orphaned Files:&lt;/h2&gt;&apos;
+            print '&lt;p&gt;&lt;h2&gt;Orphaned Files:&lt;/h2&gt;'
             for orphan in self.orphans:
-                print &apos;&lt;div class=&quot;borked&quot;&gt;&apos;,orphan,&apos;&lt;/div&gt;&apos;
-            print &apos;&lt;/p&gt;&apos;
+                print '&lt;div class="borked"&gt;',orphan,'&lt;/div&gt;'
+            print '&lt;/p&gt;'
             
         if len(self.errors) &gt; 0:
-            print &apos;&lt;p&gt;&lt;h2&gt;Errors:&lt;/h2&gt;&apos;
+            print '&lt;p&gt;&lt;h2&gt;Errors:&lt;/h2&gt;'
             for error in self.errors:
-                print &apos;&lt;div class=&quot;borked&quot;&gt;&apos;,error,&apos;&lt;/div&gt;&apos;
-            print &apos;&lt;/p&gt;&apos;
+                print '&lt;div class="borked"&gt;',error,'&lt;/div&gt;'
+            print '&lt;/p&gt;'
 
         if (len(self.errors) + len(self.orphans) + self.num_broken_links)  == 0:
-            print &quot;&lt;h1&gt;well done ;)&lt;/h1&gt;&quot;
+            print "&lt;h1&gt;well done ;)&lt;/h1&gt;"
             
-        print &quot;&lt;p&gt;--&lt;br&gt;sjh&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;
+        print "&lt;p&gt;--&lt;br&gt;by sjh | foo-fu.co.uk&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;"
 
     def __init__(self,root):
         self.root = root
@@ -179,17 +180,14 @@ class link_checker():
 
 import profile
 
-project =  os.environ.get(&apos;TM_PROJECT_DIRECTORY&apos;)
+project =  os.environ.get('TM_PROJECT_DIRECTORY')
 
 if project:
 	my_link_checker = link_checker(project)
-	#profile.run(&apos;my_link_checker.e_output()&apos;)
+	#profile.run('my_link_checker.e_output()')
 	my_link_checker.e_output()
 else:
-	print &quot;No project open&quot;
-</string>
-        <key>runEnvironment</key>
-        <string>windows</string>
+	print "No project open"</string>
         <key>keyEquivalent</key>
         <string>^C</string>
     </dict>
