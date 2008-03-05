@@ -5,7 +5,50 @@
         <key>beforeRunningCommand</key>
         <string>nop</string>
         <key>command</key>
-        <string>#!/usr/bin/env ruby -w&#x0A;&#x0A;require ENV[&apos;TM_SUPPORT_PATH&apos;] + &quot;/lib/exit_codes.rb&quot;&#x0A;&#x0A;doc        = STDIN.read&#x0A;line       = ENV[&apos;TM_LINE_NUMBER&apos;].to_i&#x0A;line_index = ENV[&apos;TM_LINE_INDEX&apos;].to_i&#x0A;&#x0A;if ENV.has_key? &apos;TM_INPUT_START_LINE&apos; then&#x0A;  line       = ENV[&apos;TM_INPUT_START_LINE&apos;].to_i&#x0A;  line_index = ENV[&apos;TM_INPUT_START_LINE_INDEX&apos;].to_i&#x0A;end&#x0A;&#x0A;before = /(.*\n){#{line-1}}.{#{line_index}}/.match(doc)[0]&#x0A;&#x0A;# remove all self-closing tags&#x0A;before.gsub!(/&lt;(area|base|basefont|br|col|frame|hr|img|input|isindex|link|meta|param)\b[^&gt;]*&gt;|&lt;[^&gt;]+\/\s*&gt;/, &apos;&apos;) &#x0A;&#x0A;# remove all comments&#x0A;before.gsub!(/&lt;!--.*?--&gt;/m, &apos;&apos;)&#x0A;&#x0A;stack = [ ]&#x0A;before.scan(/&lt;\s*(\/)?\s*(\w[\w:-]*)[^&gt;]*&gt;/) do |m|&#x0A;  if m[0].nil? then&#x0A;    stack &lt;&lt; m[1]&#x0A;  else&#x0A;    until stack.empty? do&#x0A;      close_tag = stack.pop&#x0A;      break if close_tag == m[1]&#x0A;    end&#x0A;  end&#x0A;end&#x0A;&#x0A;if stack.empty? then&#x0A;  print &quot;\a&quot;  # Sound bell&#x0A;  TextMate.exit_discard&#x0A;else&#x0A;  print &quot;&lt;/#{stack.pop}&gt;&quot;&#x0A;end</string>
+        <string>#!/usr/bin/env ruby
+
+doc        = STDIN.read
+line       = ENV['TM_LINE_NUMBER'].to_i
+line_index = ENV['TM_LINE_INDEX'].to_i
+
+# The following code was removed due to it breaking this
+# command on E Text Editor.
+# if ENV.has_key? 'TM_INPUT_START_LINE' then
+#   line       = ENV['TM_INPUT_START_LINE'].to_i
+#   line_index = ENV['TM_INPUT_START_LINE_INDEX'].to_i
+# end
+
+before = /(.*\n){#{line-1}}.{#{line_index}}/.match(doc)[0]
+
+before.gsub!(/&lt;[^&gt;]+\/\s*&gt;/i, '')
+
+# remove all self-closing tags
+if ENV.has_key?('TM_HTML_EMPTY_TAGS') then
+  empty_tags = ENV['TM_HTML_EMPTY_TAGS']
+  before.gsub!(/&lt;(#{empty_tags})\b[^&gt;]*&gt;/i, '')
+end
+
+# remove all comments
+before.gsub!(/&lt;!--.*?--&gt;/m, '')
+
+stack = [ ]
+before.scan(/&lt;\s*(\/)?\s*(\w[\w:-]*)[^&gt;]*&gt;/) do |m|
+  if m[0].nil? then
+    stack &lt;&lt; m[1]
+  else
+    until stack.empty? do
+      close_tag = stack.pop
+      break if close_tag == m[1]
+    end
+  end
+end
+
+if stack.empty? then
+  print "\a"  # Sound bell
+  TextMate.exit_discard
+else
+  print "&lt;/#{stack.pop}&gt;"
+end</string>
         <key>input</key>
         <string>document</string>
         <key>keyEquivalent</key>
