@@ -12,19 +12,23 @@
                     <key>background</key>
                     <string>#414141</string>
                     <key>caret</key>
-                    <string>#A7A7A7</string>
+                    <string>#A5A5A5</string>
                     <key>foreground</key>
                     <string>#F8F8F8</string>
                     <key>invisibles</key>
                     <string>#FFFFFF40</string>
                     <key>lineHighlight</key>
-                    <string>#FFFFFF08</string>
+                    <string>#00000031</string>
                     <key>selection</key>
                     <string>#DDF0FF33</string>
                     <key>gutter</key>
                     <string>#282828</string>
                     <key>searchHighlight</key>
                     <string>#116C04</string>
+                    <key>multiEditHighlight</key>
+                    <string>#000000</string>
+                    <key>bracketHighlight</key>
+                    <string>#008000</string>
                 </dict>
             </dict>
             <dict>
@@ -544,6 +548,6 @@
             </dict>
         </array>
         <key>uuid</key>
-        <string>766026CB-703D-4610-B070-8DE07D967C5F</string>
+        <string>7009FEEB-0984-457A-BF7A-49943CD00A8B</string>
     </dict>
 </plist>
