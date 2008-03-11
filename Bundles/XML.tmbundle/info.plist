@@ -2,10 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>contactEmailRot13</key>
+	<string>gz-ohaqyrf@znpebzngrf.pbz</string>
+	<key>contactName</key>
+	<string>Allan Odgaard</string>
 	<key>deleted</key>
 	<array>
 		<string>34AB30B1-045B-476E-AEAF-5DCA7D6FF186</string>
 	</array>
+	<key>description</key>
+	<string>Support for the &lt;a href="http://www.w3.org/XML/"&gt;eXtensible Markup Language&lt;/a&gt;.</string>
 	<key>mainMenu</key>
 	<dict>
 		<key>excludedItems</key>
@@ -33,6 +39,7 @@
 		<string>A1DAE610-1E05-4174-BB6D-A51E22DB0764</string>
 		<string>67E7372F-C15F-4009-AE5B-975F2BC9DD91</string>
 		<string>BC8B9FBD-5F16-11D9-B9C3-000D93589AF6</string>
+		<string>D7194128-6995-4A8A-B10A-A68A13101AF8</string>
 		<string>F443A9C7-88A5-40EE-820E-A311B16D85C4</string>
 		<string>BC8BA078-5F16-11D9-B9C3-000D93589AF6</string>
 		<string>121626EE-6774-4DFB-B7D5-6E5A8381F1D3</string>
