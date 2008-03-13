@@ -14,9 +14,5 @@ require 'base64'
 require 'cgi'
 require 'stringio'
 
-require "#{ENV['TM_SUPPORT_PATH']}/lib/plist/parser"
-require "#{ENV['TM_SUPPORT_PATH']}/lib/plist/generator"
-
-module Plist
-  VERSION = '3.0.0'
-end
+require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/parser"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/generator"

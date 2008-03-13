@@ -27,21 +27,28 @@ module TextMate
     		styles = [:warning, :informational, :critical]
     		raise "style must be one of #{types.inspect}" unless styles.include?(style)
 		
-    		params = {'alertStyle' => style.to_s, 'messageTitle' => title, 'informativeText' => message, 'buttonTitles' => buttons}
-        button_index = %x{#{TM_DIALOG} -ep #{e_sh params.to_plist}}.chomp.to_i
-    		buttons[button_index]
+            _options = default_options_for_cocoa_dialog()
+            _options["button1"] = buttons[0] if buttons[0]
+            _options["button2"] = buttons[1] if buttons[1]
+            _options["title"] = title
+            _options["text"] = message
+            _options["no-newline"] = ""
+            return_value = cocoa_dialog("msgbox", _options)
+            return_value = return_value.first if return_value.is_a?(Array)
+
+    		return_value || buttons[1]
     	end
 
       # show the system color picker and return a hex-format color (#RRGGBB).
       # If the input string is a recognizable hex string, the default color will be set to it.
-      def request_color(string)
-        string = '#999' unless string.match(/#?[0-9A-F]{3,6}/i)
+      def request_color(string = nil)
+        string = '#999' unless string.to_s.match(/#?[0-9A-F]{3,6}/i)
         color  = string
         prefix, string = string.match(/(#?)([0-9A-F]{3,6})/i)[1,2]
         string = $1 * 2 + $2 * 2 + $3 * 2 if string =~ /^(.)(.)(.)$/
         def_col = ' default color {' + string.scan(/../).map { |i| i.hex * 257 }.join(",") + '}'
         col = `osascript 2>/dev/null -e 'tell app "TextMate" to choose color#{def_col}'`
-        return color if col == ""
+        return nil if col == "" # user cancelled -- when it happens, an exception is written to stderr
         col = col.scan(/\d+/).map { |i| "%02X" % (i.to_i / 257) }.join("")
     
         color = prefix
@@ -65,41 +72,41 @@ module TextMate
         plist['summary']  = options[:summary] || ''
         plist['log']      = options[:log]     || ''
 
-        `#{TM_DIALOG} -cap #{e_sh plist.to_plist} #{e_sh nib} &> /dev/null &`
+        `#{TM_DIALOG} -cqp #{e_sh plist.to_plist} #{e_sh nib} &> /dev/null &`
       end
   
       # pop up a menu on screen
       def menu(options)
         return nil if options.empty?
-
-        return_hash = true
-        if options[0].kind_of?(String)
+        
+        if options[0].kind_of?(Hash)
+          return_hash = true
+          options = options.collect { |e| e['separator'] ? '-' : e['title'] }
+        else
           return_hash = false
-          options = options.collect { |e| e == nil ? { 'separator' => 1 } : { 'title' => e } }
+          options = options.collect { |e| e == nil ? '-' : e }
         end
 
-        res = IO.popen("#{TM_DIALOG} -u", "r+") do |io|
-          Thread.new do
-            plist = { 'menuItems' => options }.to_plist
-            io.write plist; io.close_write
-          end
-          OSX::PropertyList::load(io)
-        end
+        _options = Hash.new
+        _options["items"] = options
+        _options["no-newfile"] = ""
 
-        return nil unless res.has_key? 'selectedIndex'
-        index = res['selectedIndex'].to_i
+        res = cocoa_dialog("menu", _options)
+
+        return nil unless res
+        index = res[0].to_i - 1
 
         return return_hash ? options[index] : index
       end
 
       # request a single, simple string
       def request_string(options = Hash.new,&block)
-        request_string_core('Enter string:', 'RequestString', options, &block)
+        request_string_core('Enter string', 'inputbox', options, &block)
       end
       
       # request a password or other text which should be obscured from view
       def request_secure_string(options = Hash.new,&block)
-        request_string_core('Enter password:', 'RequestSecureString', options, &block)
+        request_string_core('Enter password', 'secure-inputbox', options, &block)
       end
       
       # show a standard open file dialog
@@ -120,7 +127,7 @@ module TextMate
         _options["select-multiple"] = ""
         cocoa_dialog("fileselect", _options,&block)
       end
-            
+
       # Request an item from a list of items
       def request_item(options = Hash.new,&block)
         items = options[:items] || []
@@ -128,19 +135,12 @@ module TextMate
         when 0 then block_given? ? raise(SystemExit) : nil
         when 1 then block_given? ? yield(items[0]) : items[0]
         else
-          params = default_buttons(options)
-          params["title"] = options[:title] || "Select item:"
-          params["prompt"] = options[:prompt] || ""
-          params["string"] = options[:default] || ""
-          params["items"] = items
-
-          return_plist = %x{#{TM_DIALOG} -cmp #{e_sh params.to_plist} #{e_sh(ENV['TM_SUPPORT_PATH'] + "/nibs/RequestItem")}}
-          return_hash = OSX::PropertyList::load(return_plist)
-
-          # return string is in hash->result->returnArgument.
-          # If cancel button was clicked, hash->result is nil.
-          return_value = return_hash['result']
-          return_value = return_value['returnArgument'] if not return_value.nil?
+          _options = default_options_for_cocoa_dialog(options)
+          _options["title"] = options[:title] || "Select item"
+          _options["text"] = options[:prompt] || ""
+          _options["items"] = items
+#          _options["text"] = options[:default] || "" # no way to specify default item?
+          return_value = cocoa_dialog("dropdown", _options)
           return_value = return_value.first if return_value.is_a? Array
 
           if return_value == nil then
@@ -191,6 +191,11 @@ module TextMate
             @dialog_token = %x{#{command}}.chomp
             raise WindowNotFound, "No such dialog (#{@dialog_token})\n} for command: #{command}" if $CHILD_STATUS != 0
       #      raise "No such dialog (#{@dialog_token})\n} for command: #{command}" if $CHILD_STATUS != 0
+
+            # this is a workaround for a presumed Leopard bug, see log entry for revision 8566 for more info
+            if animate = start_parameters['progressAnimate']
+              open("|#{TM_DIALOG} -t#{@dialog_token}", "w") { |io| io << { 'progressAnimate' => animate }.to_plist }
+            end
           end
 
           # wait for the user to press a button (with performButtonClick: or returnArguments: action)
@@ -232,19 +237,18 @@ module TextMate
       private
       
       # common to request_string, request_secure_string
-      def request_string_core(default_prompt, nib_name, options, &block)
+      def request_string_core(default_prompt, type, options, &block)
         params = default_buttons(options)
         params["title"] = options[:title] || default_prompt
         params["prompt"] = options[:prompt] || ""
         params["string"] = options[:default] || ""
-        
-        return_plist = %x{#{TM_DIALOG} -cmp #{e_sh params.to_plist} #{e_sh(ENV['TM_SUPPORT_PATH'] + "/nibs/#{nib_name}")}}
-        return_hash = OSX::PropertyList::load(return_plist)
-        
-        # return string is in hash->result->returnArgument.
-        # If cancel button was clicked, hash->result is nil.
-        return_value = return_hash['result']
-        return_value = return_value['returnArgument'] if not return_value.nil?
+
+        _options = default_options_for_cocoa_dialog(options)
+        _options["title"] = options[:title] || default_prompt
+        _options["informative-text"] = options[:prompt] || ""
+        _options["text"] = options[:default] || ""
+
+        return_value = cocoa_dialog(type, _options)
         
         if return_value == nil then
           block_given? ? raise(SystemExit) : nil
@@ -264,12 +268,19 @@ module TextMate
         cd = ENV['TM_SUPPORT_PATH'] + '/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog'
         result = %x{#{e_sh cd} 2>/dev/console #{e_sh type} #{str} --float}
         result = result.to_a.map{|line| line.chomp}
-        if (type == "fileselect")
+        if (["fileselect","menu", "msgbox"].include?(type))
           if result.length == 0
             return_value = options['button2'] # simulate cancel
+          else
+            return_value = true
           end
         else
           return_value, result = *result
+          if (["inputbox", "secure-inputbox", "standard-inputbox", "secure-standard-inputbox"].include?(type))
+            if return_value.length == 0
+              return_value = options['button2']
+            end
+          end
         end
         if return_value == options["button2"] then
           block_given? ? raise(SystemExit) : nil

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require "#{ENV['TM_SUPPORT_PATH']}/lib/plist"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/plist"
 require "#{ENV['TM_SUPPORT_PATH']}/lib/escape"
 
 module TextMate
@@ -14,11 +14,21 @@ module TextMate
       raise AppPathNotFoundException
     end
 
+    def go_to(options = {})
+      default_line = options.has_key?(:file) ? 1 : ENV['TM_LINE_NUMBER']
+      options = {:file => ENV['TM_FILEPATH'], :line => default_line, :column => 1}.merge(options)
+      if options[:file]
+        `open "txmt://open?url=file://#{e_url options[:file]}&line=#{options[:line]}&column=#{options[:column]}"`
+      else
+        `open "txmt://open?line=#{options[:line]}&column=#{options[:column]}"`
+      end
+    end
+
     def min_support(version)
       actual_version = IO.read(ENV['TM_SUPPORT_PATH'] + '/version').to_i
       if actual_version < version then
-        require 'dialog'
-        Dialog.request_confirmation(:title => "Support Folder is Outdated", :prompt => "Your version of the shared support folder is too old for this action to run.\n\nYou need version #{version} but only have #{actual_version}.", :button1 => "More Info") do
+        require 'ui'
+        TextMate::UI.request_confirmation(:title => "Support Folder is Outdated", :prompt => "Your version of the shared support folder is too old for this action to run.\n\nYou need version #{version} but only have #{actual_version}.", :button1 => "More Info") do
           help_url = "file://#{e_url(self.app_path + '/Contents/Resources/English.lproj/TextMate Help Book/bundles.html')}#support_folder"
           %x{ open #{e_sh help_url} }
           # # unfortuantely the help viewer ignores the fragment specifier of the URL
@@ -31,6 +41,13 @@ module TextMate
         end
         raise SystemExit
       end
+    end
+
+    def rescan_project
+      `osascript &>/dev/null \
+    	   -e 'tell app "SystemUIServer" to activate'; \
+    	 osascript &>/dev/null \
+    	   -e 'tell app "TextMate" to activate' &`
     end
   end
 
@@ -49,7 +66,7 @@ module TextMate
       prefs_file = "#{ENV['HOME']}/Library/Preferences/com.macromates.textmate.plist"
       if File.exist?(prefs_file) then
         File.open(prefs_file) do |f|
-          return PropertyList::load(f)[key]
+          return OSX::PropertyList::load(f)[key]
         end
       end
     end
@@ -90,11 +107,12 @@ module TextMate
       a_directory = File.directory?(file)
       ptrn = a_directory ? @folder_pattern : @file_pattern
       skip_it = ptrn[:regexp].match(file) ? ptrn[:negate] : !ptrn[:negate]
-      return (skip_it or a_directory) ? skip_it : binary?(file)
+      return (skip_it or a_directory) ? skip_it || File.symlink?(file) : binary?(file)
     end
   end
 
   def TextMate.scan_dir (dir, block, filter)
+    return unless File.executable?(dir)
     Dir.entries(dir).each do |filename|
       fullpath = File.join(dir, filename)
       if(filter.skip?(fullpath)) then

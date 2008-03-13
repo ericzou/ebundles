@@ -10,23 +10,24 @@
 # === Load a plist file
 # This is the main point of the library:
 #
-#   r = Plist::parse_xml( filename_or_xml )
-module Plist
+#   r = OSX::PropertyList::load( filename_or_xml )
+module OSX
+ module PropertyList
 # Note that I don't use these two elements much:
 #
 #  + Date elements are returned as DateTime objects.
 #  + Data elements are implemented as Tempfiles
 #
-# Plist::parse_xml will blow up if it encounters a data element.
+# OSX::PropertyList::load will blow up if it encounters a data element.
 # If you encounter such an error, or if you have a Date element which
 # can't be parsed into a Time object, please send your plist file to
 # plist@hexane.org so that I can implement the proper support.
-  def Plist::parse_xml( filename_or_xml )
+  def PropertyList::load( filename_or_xml, return_type = false )
     listener = Listener.new
     #parser = REXML::Parsers::StreamParser.new(File.new(filename), listener)
     parser = StreamParser.new(filename_or_xml, listener)
     parser.parse
-    listener.result
+    return_type ? [listener.result, :xml1] : listener.result
   end
 
   class Listener
@@ -79,7 +80,11 @@ module Plist
       require 'strscan'
 
       contents = (
-        if (File.exists? @filename_or_xml)
+        if (!@filename_or_xml)
+          nil
+        elsif (@filename_or_xml.respond_to?(:read))
+          @filename_or_xml.read
+        elsif (File.exists? @filename_or_xml)
           File.open(@filename_or_xml) {|f| f.read}
         else
           @filename_or_xml
@@ -116,7 +121,7 @@ module Plist
 
     def PTag::inherited( sub_class )
       key = sub_class.to_s.downcase
-      key.gsub!(/^plist::/, '' )
+      key.gsub!(/^osx::propertylist::/, '' )
       key.gsub!(/^p/, '')  unless key == "plist"
 
       @@mappings[key] = sub_class
@@ -222,4 +227,5 @@ module Plist
       end
     end
   end
+ end
 end

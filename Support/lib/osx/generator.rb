@@ -6,7 +6,8 @@
 ##############################################################
 #++
 # See Plist::Emit.
-module Plist
+module OSX
+ module PropertyList
   # === Create a plist
   # You can dump an object to a plist in one of two ways:
   #
@@ -24,12 +25,12 @@ module Plist
   module Emit
     # Helper method for injecting into classes.  Calls <tt>Plist::Emit.dump</tt> with +self+.
     def to_plist(envelope = true)
-      return Plist::Emit.dump(self, envelope)
+      return OSX::PropertyList::Emit.dump(self, envelope)
     end
 
     # Helper method for injecting into classes.  Calls <tt>Plist::Emit.save_plist</tt> with +self+.
     def save_plist(filename)
-      Plist::Emit.save_plist(self, filename)
+      OSX::PropertyList::Emit.save_plist(self, filename)
     end
 
     # The following Ruby classes are converted into native plist types:
@@ -206,6 +207,7 @@ module Plist
       end
     end
   end
+ end
 end
 
 # we need to add this so sorting hash keys works properly
@@ -216,9 +218,9 @@ class Symbol #:nodoc:
 end
 
 class Array #:nodoc:
-  include Plist::Emit
+  include OSX::PropertyList::Emit
 end
 
 class Hash #:nodoc:
-  include Plist::Emit
+  include OSX::PropertyList::Emit
 end
