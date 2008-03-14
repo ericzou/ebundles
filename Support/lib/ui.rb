@@ -46,11 +46,14 @@ module TextMate
         color  = string
         prefix, string = string.match(/(#?)([0-9A-F]{3,6})/i)[1,2]
         string = $1 * 2 + $2 * 2 + $3 * 2 if string =~ /^(.)(.)(.)$/
-        def_col = ' default color {' + string.scan(/../).map { |i| i.hex * 257 }.join(",") + '}'
-        col = `osascript 2>/dev/null -e 'tell app "TextMate" to choose color#{def_col}'`
-        return nil if col == "" # user cancelled -- when it happens, an exception is written to stderr
-        col = col.scan(/\d+/).map { |i| "%02X" % (i.to_i / 257) }.join("")
-    
+        
+        _options = default_options_for_cocoa_dialog()
+        _options["color"] = string
+        
+        col = cocoa_dialog("colorselect", _options)
+        return nil unless col && col != "" # user cancelled
+        col.delete! '#'
+
         color = prefix
         if /(.)\1(.)\2(.)\3/.match(col) then
           color << $1 + $2 + $3
@@ -94,7 +97,7 @@ module TextMate
         res = cocoa_dialog("menu", _options)
 
         return nil unless res
-        index = res[0].to_i - 1
+        index = res.to_i - 1
 
         return return_hash ? options[index] : index
       end
@@ -268,7 +271,7 @@ module TextMate
         cd = ENV['TM_SUPPORT_PATH'] + '/bin/CocoaDialog.app/Contents/MacOS/CocoaDialog'
         result = %x{#{e_sh cd} 2>/dev/console #{e_sh type} #{str} --float}
         result = result.to_a.map{|line| line.chomp}
-        if (["fileselect","menu", "msgbox"].include?(type))
+        if (["fileselect","menu", "msgbox", "colorselect", "colourselect"].include?(type))
           if result.length == 0
             return_value = options['button2'] # simulate cancel
           else
@@ -282,6 +285,7 @@ module TextMate
             end
           end
         end
+        result = result[0] if result.is_a?(Array) && result.length==1
         if return_value == options["button2"] then
           block_given? ? raise(SystemExit) : nil
         else
