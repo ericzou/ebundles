@@ -8,12 +8,17 @@
 # See Plist::Emit.
 module OSX
  module PropertyList
+
+ def dump(io, plist, type = :xml1)
+   io.write(plist.to_plist(type))
+ end
+ 
   # === Create a plist
   # You can dump an object to a plist in one of two ways:
   #
-  # * <tt>Plist::Emit.dump(obj)</tt>
+  # * <tt>OSX::PropertyList::Emit.dump(obj)</tt>
   # * <tt>obj.to_plist</tt>
-  #   * This requires that you mixin the <tt>Plist::Emit</tt> module, which is already done for +Array+ and +Hash+.
+  #   * This requires that you mixin the <tt>OSX::PropertyList::Emit</tt> module, which is already done for +Array+ and +Hash+.
   #
   # The following Ruby classes are converted into native plist types:
   #   Array, Bignum, Date, DateTime, Fixnum, Float, Hash, Integer, String, Symbol, Time, true, false
@@ -24,13 +29,8 @@ module OSX
   # For detailed usage instructions, refer to USAGE[link:files/docs/USAGE.html] and the methods documented below.
   module Emit
     # Helper method for injecting into classes.  Calls <tt>Plist::Emit.dump</tt> with +self+.
-    def to_plist(envelope = true)
-      return OSX::PropertyList::Emit.dump(self, envelope)
-    end
-
-    # Helper method for injecting into classes.  Calls <tt>Plist::Emit.save_plist</tt> with +self+.
-    def save_plist(filename)
-      OSX::PropertyList::Emit.save_plist(self, filename)
+    def to_plist(type = :xml1)
+      return OSX::PropertyList::Emit.dump(self, type)
     end
 
     # The following Ruby classes are converted into native plist types:
@@ -40,20 +40,12 @@ module OSX
     #
     # +IO+ and +StringIO+ objects are encoded and placed in <data> elements; other objects are <tt>Marshal.dump</tt>'ed unless they implement +to_plist_node+.
     #
-    # The +envelope+ parameters dictates whether or not the resultant plist fragment is wrapped in the normal XML/plist header and footer.  Set it to false if you only want the fragment.
-    def self.dump(obj, envelope = true)
+    def self.dump(obj, type = :xml1)
+      type = :xml1 if type=="xml1"
+      raise "plist type #{type} not supported" if not [:xml1].include?(type)
       output = plist_node(obj)
 
-      output = wrap(output) if envelope
-
-      return output
-    end
-
-    # Writes the serialized object's plist to the specified filename.
-    def self.save_plist(obj, filename)
-      File.open(filename, 'wb') do |f|
-        f.write(obj.to_plist)
-      end
+      wrap(output)
     end
 
     private
