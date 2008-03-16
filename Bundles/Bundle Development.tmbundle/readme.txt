@@ -19,3 +19,10 @@ The following changes were made:
   "ENV['TM_%E2%80%A6'].tmSnippet" was changed because of incompatibilities with E snippet engine
 
   "Require 'Support%3Alib%3A%E2%80%A6'.tmSnippet" was changed because of incompatibilities with E snippet engine
+
+16/03/2008 andrey.turkin
+Update from tmbundles4win, almost verbatim except for:
+
+  "Help: Scope Conventions" was fixed to work with IE too
+
+  pl and plutil commands were put in support/bin (pl doesn't work as MacOS version but should suffice for "Show Changes" command
