@@ -11,12 +11,10 @@ doc        = STDIN.read
 line       = ENV['TM_LINE_NUMBER'].to_i
 line_index = ENV['TM_LINE_INDEX'].to_i
 
-# The following code was removed due to it breaking this
-# command on E Text Editor.
-# if ENV.has_key? 'TM_INPUT_START_LINE' then
-#   line       = ENV['TM_INPUT_START_LINE'].to_i
-#   line_index = ENV['TM_INPUT_START_LINE_INDEX'].to_i
-# end
+if ENV.has_key? 'TM_INPUT_START_LINE' then
+  line       = ENV['TM_INPUT_START_LINE'].to_i
+  line_index = ENV['TM_INPUT_START_LINE_INDEX'].to_i
+end
 
 before = /(.*\n){#{line-1}}.{#{line_index}}/.match(doc)[0]
 
@@ -44,8 +42,7 @@ before.scan(/&lt;\s*(\/)?\s*(\w[\w:-]*)[^&gt;]*&gt;/) do |m|
 end
 
 if stack.empty? then
-  print "\a"  # Sound bell
-  TextMate.exit_discard
+  exit
 else
   print "&lt;/#{stack.pop}&gt;"
 end</string>
