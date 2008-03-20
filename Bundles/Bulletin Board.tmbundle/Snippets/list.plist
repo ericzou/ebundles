@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>[LIST${1:=1}]
+	<string>[list${1:=1}]
 [*] ${2:item 1}
-[/LIST]</string>
+[/list]</string>
 	<key>name</key>
 	<string>New List</string>
 	<key>scope</key>

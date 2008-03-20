@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>[U]${1:${TM_SELECTED_TEXT:underlined text}}[/U]$2</string>
+	<string>[u]${1:${TM_SELECTED_TEXT:underlined text}}[/u]$2</string>
 	<key>keyEquivalent</key>
 	<string>@u</string>
 	<key>name</key>

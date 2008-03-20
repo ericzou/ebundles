@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>[B]${1:${TM_SELECTED_TEXT:bold text}}[/B]$2</string>
+	<string>[b]${1:${TM_SELECTED_TEXT:bold text}}[/b]$2</string>
 	<key>keyEquivalent</key>
 	<string>@b</string>
 	<key>name</key>

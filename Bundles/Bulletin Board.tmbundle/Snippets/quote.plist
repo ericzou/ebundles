@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>[QUOTE]Originally posted by ${1:user}:
-${2:quotation}[/QUOTE]
+	<string>[quote]Originally posted by ${1:user}:
+${2:quotation}[/quote]
 $3</string>
 	<key>name</key>
 	<string>Quotation</string>

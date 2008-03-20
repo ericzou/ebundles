@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>[IMG]${1:source}[/IMG]$2</string>
+	<string>[img]${1:source}[/img]$2</string>
 	<key>name</key>
 	<string>Image</string>
 	<key>scope</key>
