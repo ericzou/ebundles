@@ -59,8 +59,14 @@ class Settings
   ]
   
   def self.markers
-    plist = open(ENV['HOME'] + '/Library/Preferences/com.macromates.textmate.plist') { |io| OSX::PropertyList.load(io) }
-    res = plist['TODO Markers'] || @defaults
+    prefs_file = ENV['HOME'] + '/Library/Preferences/com.macromates.textmate.plist'
+    if File.exist?(prefs_file) then
+      plist = File.open(prefs_file) { |io| OSX::PropertyList.load(io) }
+      plist = plist['TODO Markers'] if plist
+    else
+      plist = nil
+    end
+    res = plist || @defaults
     res.map { |e| Marker.new(e) }.reject { |e| e.disabled? }
   end
 
