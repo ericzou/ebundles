@@ -62,6 +62,15 @@ module TextMate
     def project_directory
       env(:project_directory)
     end
+    
+    def filepath
+      filepath = env(:filepath)
+      if filepath
+        return filepath
+      else
+        project_directory
+      end
+    end
 
     def env(var)
       ENV['TM_' + var.to_s.upcase]

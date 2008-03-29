@@ -27,7 +27,7 @@
 		<string>43304E62-66F7-424D-8AF6-33E0237BF349</string>
 	</array>
 	<key>description</key>
-	<string>&lt;a href="http://www.rubyonrails.com/"&gt;Ruby on Rails&lt;/a&gt; is a full-stack framework for developing database-backed web applications, in Ruby, according to the Model-View-Control pattern.</string>
+	<string>E Text Editor port of the Rails 2.0 Bundle for TextMate. &lt;a href="http://www.rubyonrails.com/"&gt;Ruby on Rails&lt;/a&gt; is a full-stack framework for developing database-backed web applications, in Ruby, according to the Model-View-Control pattern.</string>
 	<key>mainMenu</key>
 	<dict>
 		<key>excludedItems</key>

@@ -14,6 +14,8 @@ h2. Add some models
 
 <pre>ruby script/generate model Post subject:string body:text</pre>
 
+_A note regarding generators: there is a Call Generate Script command (Alt-Shift-\) that can be used for calling generator scripts, but it tends to be quite slow in E Text Editor and so it's probably best if you stick to using the command line for calling generators._
+
 This creates a 001_create_posts migration with a create_table:
 
 <pre syntax="ruby">create_table :posts do |t|
