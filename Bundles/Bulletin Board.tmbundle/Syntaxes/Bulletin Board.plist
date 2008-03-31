@@ -5,6 +5,7 @@
 	<key>fileTypes</key>
 	<array>
 		<string>bbcode</string>
+		<string>bb</string>
 	</array>
 	<key>foldingStartMarker</key>
 	<string>(?x)
