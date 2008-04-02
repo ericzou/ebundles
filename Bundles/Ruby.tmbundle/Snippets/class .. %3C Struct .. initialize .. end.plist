@@ -3,14 +3,20 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>inject(${1:init}) { |${2:mem}, ${3:var}| $0 }</string>
+	<string>${1:ClassName} = Struct.new(:${2:attr_names}) do
+	def ${3:method_name}
+		$0
+	end
+	
+	
+end</string>
 	<key>name</key>
-	<string>inject(init) { |mem, var| .. }</string>
+	<string>ClassName = Struct .. do .. end</string>
 	<key>scope</key>
 	<string>source.ruby</string>
 	<key>tabTrigger</key>
-	<string>inj</string>
+	<string>cla</string>
 	<key>uuid</key>
-	<string>B563E0D7-513D-49B4-9733-1B04A6F25A74</string>
+	<string>05DFF82C-5A29-4EBD-93FE-C165FFFB5EA8</string>
 </dict>
 </plist>

@@ -1,20 +1,27 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>beforeRunningCommand</key>
-        <string>nop</string>
-        <key>command</key>
-        <string>#!/usr/bin/env ruby&#x0A;&#x0A;require &quot;#{ENV[&quot;TM_SUPPORT_PATH&quot;]}/lib/escape&quot;&#x0A;require &quot;#{ENV[&quot;TM_SUPPORT_PATH&quot;]}/lib/dialog&quot;&#x0A;require &quot;#{ENV[&quot;TM_SUPPORT_PATH&quot;]}/lib/web_preview&quot;&#x0A;&#x0A;require &quot;erb&quot;&#x0A;include ERB::Util&#x0A;require &quot;pstore&quot;&#x0A;&#x0A;RAKEMATE_VERSION = &quot;1.3.0&quot;.freeze&#x0A;DEFAULT_TASK     = &quot;(default task)&quot;.freeze&#x0A;RAKEFILE_DIR     = (ENV[&quot;TM_PROJECT_DIRECTORY&quot;] || ENV[&quot;TM_DIRECTORY&quot;]).freeze&#x0A;&#x0A;html_header(&quot;RakeMate&quot;, &quot;Rake&quot;)&#x0A;puts &lt;&lt;-HTML&#x0A;&lt;pre&gt;RakeMate v#{RAKEMATE_VERSION} running on Ruby v#{RUBY_VERSION} (#{`which ruby`.strip})&#x0A;&amp;gt;&amp;gt;&amp;gt; #{RAKEFILE_DIR}/Rakefile&#x0A;&#x0A;HTML&#x0A;&#x0A;rake = ENV[&quot;TM_RAKE&quot;] ||&#x0A;       ENV[&quot;PATH&quot;].split(&quot;:&quot;).map { |dir| File.join(dir, &quot;rake&quot;) }.&#x0A;                              find { |r| File.exist? r }&#x0A;if rake.nil?&#x0A;  puts &quot;Rake not found.  Please set TM_RAKE.&quot;&#x0A;  puts &quot;&lt;/pre&gt;&quot;&#x0A;  html_footer&#x0A;  exit&#x0A;end&#x0A;&#x0A;prefs = PStore.new( File.expand_path( &quot;~/Library/Preferences/&quot; +&#x0A;                                      &quot;com.macromates.textmate.run_rake&quot; ) )&#x0A;&#x0A;Dir.chdir(RAKEFILE_DIR)&#x0A;tasks = `#{rake} --tasks`&#x0A;&#x0A;unless $?.exited?&#x0A;  puts &quot;Could not fetch task list.&quot;&#x0A;  puts &quot;&lt;/pre&gt;&quot;&#x0A;  html_footer&#x0A;  exit&#x0A;end&#x0A;if tasks.include? &quot;No Rakefile found&quot;&#x0A;  puts &quot;Could not locate a Rakefile in #{RAKEFILE_DIR}.&quot;&#x0A;  puts &quot;&lt;/pre&gt;&quot;&#x0A;  html_footer&#x0A;  exit&#x0A;end&#x0A;&#x0A;tasks = [DEFAULT_TASK] + tasks.grep(/^rake\s+(\S+)/) { |t| t.split[1] }&#x0A;if last_task = tasks.index(prefs.transaction(true) { prefs[RAKEFILE_DIR] })&#x0A;  tasks.unshift(tasks.slice!(last_task))&#x0A;end&#x0A;&#x0A;if task = Dialog.request_item( :title   =&gt; &quot;Rake Tasks&quot;,&#x0A;                               :prompt  =&gt; &quot;Select a task to execute:&quot;,&#x0A;                               :items   =&gt; tasks,&#x0A;                               :button1 =&gt; &quot;Run Task&quot;)&#x0A;  prefs.transaction { prefs[RAKEFILE_DIR] = task }&#x0A;  &#x0A;  testing = task =~ /test/i || task == DEFAULT_TASK&#x0A;  open(&quot;|#{rake} #{task == &quot;(default task)&quot; ? &quot;&quot; : task} 2&gt;&amp;1&quot;) do |output|&#x0A;&#x09;  while line = output.gets&#x0A;&#x09;    if testing and line =~ /^\d+ tests, \d+ assertions, (\d+) failures, (\d+) errors/&#x0A;&#x09;      print &quot;&lt;span style=\&quot;color: &quot;,&#x0A;&#x09;            ($1 + $2 == &quot;00&quot; ? &quot;green&quot; : &quot;red&quot;),&#x0A;&#x09;            &quot;\&quot;&gt;#{line.chomp}&lt;/span&gt;&lt;br /&gt;&quot;&#x0A;&#x09;    elsif testing and line =~ /^(\s+)(\S.*?):(\d+)(?::in\s*`(.*?)&apos;)?/ and File.exist? $2&#x0A;        indent, file, line, method = $1, $2, $3, $4&#x0A;&#x0A;        url, display_name = &apos;&apos;, &apos;untitled document&apos;;&#x0A;        unless file == &quot;-&quot;&#x0A;          url = &apos;&amp;url=file://&apos; + e_url(File.expand_path(file))&#x0A;          display_name = File.basename(file)&#x0A;        end&#x0A;&#x0A;        print &quot;#{indent}&lt;a class=&apos;near&apos; href=&apos;txmt://open?line=#{line + url}&apos;&gt;&quot; +&#x0A;              (method ? &quot;method #{h method}&quot; : &apos;&lt;em&gt;at top level&lt;/em&gt;&apos;) +&#x0A;              &quot;&lt;/a&gt; in &lt;strong&gt;#{h display_name}&lt;/strong&gt; at line #{line}&lt;br/&gt;&quot;&#x0A;      else&#x0A;&#x09;      print h(line).sub(&quot;\n&quot;, &quot;&lt;br /&gt;&quot;)&#x0A;      end&#x0A;&#x09;    $stdout.flush&#x0A;&#x09;    if testing and line =~ /^Started\s*/&#x0A;&#x09;      wrap = 0&#x0A;&#x09;      while test = output.getc.chr&#x0A;&#x09;        wrap += 1&#x0A;&#x09;        if %w[. E F].include? test&#x0A;&#x09;          print test.sub(/^[EF]$/, &quot;&lt;span style=\&quot;color: red\&quot;&gt;\\&amp;&lt;/span&gt;&quot;),&#x0A;&#x09;                (wrap % 80 == 0 ? &quot;&lt;br /&gt;&quot; : &quot;&lt;br style=\&quot;display: none\&quot;/&gt;&quot;)&#x0A;&#x09;          $stdout.flush&#x0A;          else&#x0A;&#x09;          print test.sub(&quot;\n&quot;, &quot;&lt;br /&gt;&quot;)&#x0A;&#x09;          $stdout.flush&#x0A;&#x09;          break&#x0A;          end&#x0A;        end&#x0A;      end&#x0A;&#x09;  end&#x0A;  end&#x0A;  puts &quot;&lt;/pre&gt;&quot;&#x0A;  html_footer&#x0A;end&#x0A;&#x0A;</string>
-        <key>input</key>
-        <string>none</string>
-        <key>keyEquivalent</key>
-        <string>^R</string>
-        <key>name</key>
-        <string>Run Rake Task</string>
-        <key>output</key>
-        <string>showAsHTML</string>
-        <key>uuid</key>
-        <string>569C9822-8C41-4907-94C7-1A8A0031B66D</string>
-    </dict>
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>export RUBYLIB="$TM_BUNDLE_SUPPORT/RakeMate${RUBYLIB:+:$RUBYLIB}"
+export TM_RUBY=$(which "${TM_RUBY:-ruby}")
+export TM_RAKE=$(which "${TM_RAKE:-rake}")
+
+"${TM_RUBY}" -- "$TM_BUNDLE_SUPPORT/RakeMate/rake_mate.rb"
+</string>
+	<key>input</key>
+	<string>none</string>
+	<key>keyEquivalent</key>
+	<string>^R</string>
+	<key>name</key>
+	<string>Run Rake Task</string>
+	<key>output</key>
+	<string>showAsHTML</string>
+	<key>scope</key>
+	<string>source.ruby</string>
+	<key>uuid</key>
+	<string>569C9822-8C41-4907-94C7-1A8A0031B66D</string>
+</dict>
 </plist>

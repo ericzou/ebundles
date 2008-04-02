@@ -5,16 +5,30 @@
 
 module samwi_78se
 	
-	class dubya < slime
+	class mysuperclassofdoom < someotherclass
 
 	end
 end
 
 class gallo_way8 < kni9_ght
+  
+  def sl_9ay(beast)
+    
+  end
 
-	def sl_9ay(beast)
-		
-	end
+  #These shouldn't capture the leading space before it
+  def my_method_of_doom(args)
+    'yay'
+  rescue
+    'whatever'
+  ensure
+    'something else'
+  end
+  
+  def my_method_of_doom(args);'yay';rescue;'whatever';ensure;'something else';end
+  
+  #The indent here should not be broken
+  
 end
 
 
@@ -39,6 +53,118 @@ x, y = b2vxay(m.begin(0) + b1)
 stream.next
 self.class
 
+
+# keyword.operator
+
+var1 ==  var2
+var1 === var2
+var1 =~  var2
+var1 =   var2
+var1 *   var2
+var1 -   var2
+var1 +   var2
+var1 %   var2
+var1 ^   var2
+var1 &   var2
+var1 *   var2
+
+# Method
+u.whatever +  'something'
+u.whatever + ('something')
+u.whatever +( 'something')
+u.whatever+   'something'
+u.whatever+  ('something')
+u.whatever+(  'something')
+
+u.whatever =  'something'
+u.whatever = ('something')
+u.whatever =( 'something')
+u.whatever=   'something'
+u.whatever=  ('something')
+u.whatever=(  'something')
+
+u.whatever =  12345
+u.whatever = (12345)
+u.whatever =( 12345)
+u.whatever=   12345
+u.whatever=  (12345)
+u.whatever=(  12345)
+u.whatever =12345
+u.whatever=12345
+
+u.whatever ==  'something'
+u.whatever == ('something')
+u.whatever ==( 'something')
+u.whatever==   'something'
+u.whatever==  ('something')
+u.whatever==(  'something')
+
+u.whatever ===  'something'
+u.whatever === ('something')
+u.whatever ===( 'something')
+u.whatever===   'something'
+u.whatever===  ('something')
+u.whatever===(  'something')
+
+u.password =  'something'
+u.password = ('something')
+u.password =( 'something')
+u.password=   'something'
+u.password=  ('something')
+u.password=(  'something')
+
+u.abort_on_exception =  'something'
+u.abort_on_exception = ('something')
+u.abort_on_exception =( 'something')
+u.abort_on_exception=   'something'
+u.abort_on_exception=  ('something')
+u.abort_on_exception=(  'something')
+
+u.success ?  'something'  :  'something else'
+u.success ? ('something') : ('something else')
+u.success ?( 'something') :( 'something else') #?( shouldn't be scoped as constant.numeric
+u.success?   'something'  :  'something else' 
+u.success?  ('something') : ('something else')
+u.success?(  'something') :( 'something else')
+
+# Function
+whatever =  'something'
+whatever = ('something')
+whatever =( 'something')
+whatever=   'something'
+whatever=  ('something')
+whatever=(  'something')
+
+password =  'something'
+password = ('something')
+password =( 'something')
+password=   'something'
+password=  ('something')
+password=(  'something')
+
+
+# this Totally kills Ruby Experimental ATM (Mon Jan 29 10:38:00 EST 2007)
+
+fred(  )fred()
+fred( ) fred()
+fred( ).fred()
+fred() .fred()
+fred.fred()
+
+# /kills
+
+# method calls no dot or round brackets
+puts "shmoo"
+foo {}
+foo bar
+
+# Regular Variables
+foo
+bar
+foo = 1
+foo = bar
+
+
 ############
 # numbers
 
@@ -47,6 +173,7 @@ data += 0.chr
 
 0.9		# number
 0.A		# method invocation (0 -> A)
+0.A()	# method invocation (0 -> A)
 0xCAFEBABE022409ad802046	# hex
 23402	# integer
 4.232	# decimal
@@ -116,10 +243,14 @@ val?(a):p(b)
 val?'a':'b'
 M[1]?(a+b):p(c+d)
 
+val ? (a) : p(b)
+val ? 'a' : 'b'
+M[1] ? (a+b) : p(c+d)
+
 # but we must also account for ? in method names
-thing.call?(:someone)
-thing.call? :someone
-thing.call? thing2, :someone
+thing.fred?(:someone)
+thing.fred? :someone
+thing.fred? thing2, :someone
 
 begin = {"(?=\\w)\\s*\\?:"}
 

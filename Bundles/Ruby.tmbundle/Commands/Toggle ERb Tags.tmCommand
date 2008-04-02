@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>beforeRunningCommand</key>
-        <string>nop</string>
-        <key>command</key>
-        <string>#!/usr/bin/env ruby -w
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby -w
 
 require "#{ENV["TM_SUPPORT_PATH"]}/lib/escape"
 require "enumerator"
@@ -24,40 +24,34 @@ input = $stdin.read
 
 # snippetize output
 lines       = input.to_a
-lines[line] = e_sn(lines[line][0...col]) + "$0" + e_sn(lines[line][col..-1])
+lines[line] = e_sn(lines[line][0...col]) + "${0}" + e_sn(lines[line][col..-1])
 output      = lines.enum_with_index.inject(String.new) do |out, (l, i)|
   i == line ? out + l : out + e_sn(l)
 end
 
-# if we've just been given only a comment with no &lt;% %&gt; wrapping tags
-if output[0] == ?#
-   result = output
-   result[0] = '='
+# swap ERb tags
+result = output.sub(/\A&lt;%[-#=]?/) { |match| TAGS[TAGS.index(match) - 1] }
+if result[2] == ?-
+  result.sub!(/%&gt;\Z/, "-%&gt;")
 else
-   # swap ERb tags
-  result = output.sub(/\A&lt;%[-#=]?/) { |match| TAGS[TAGS.index(match) - 1] }
-   if result[2] == ?-
-     result.sub!(/%&gt;\Z/, "-%&gt;")
-   else
-     result.sub!(/-%&gt;\Z/, "%&gt;")
-   end
+  result.sub!(/-%&gt;\Z/, "%&gt;")
 end
-print result </string>
-        <key>disableOutputAutoIndent</key>
-        <true />
-        <key>fallbackInput</key>
-        <string>scope</string>
-        <key>input</key>
-        <string>selection</string>
-        <key>keyEquivalent</key>
-        <string>^&gt;</string>
-        <key>name</key>
-        <string>Toggle ERb Tags</string>
-        <key>output</key>
-        <string>insertAsSnippet</string>
-        <key>scope</key>
-        <string>source.ruby.embedded, source.ruby.rails.embedded, comment.block.erb</string>
-        <key>uuid</key>
-        <string>835FAAC6-5431-436C-998B-241F7226B99B</string>
-    </dict>
+print result</string>
+	<key>disableOutputAutoIndent</key>
+	<true/>
+	<key>fallbackInput</key>
+	<string>scope</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string>^&gt;</string>
+	<key>name</key>
+	<string>Toggle ERb Tags</string>
+	<key>output</key>
+	<string>insertAsSnippet</string>
+	<key>scope</key>
+	<string>source.ruby.embedded, source.ruby.rails.embedded, comment.block.erb</string>
+	<key>uuid</key>
+	<string>835FAAC6-5431-436C-998B-241F7226B99B</string>
+</dict>
 </plist>

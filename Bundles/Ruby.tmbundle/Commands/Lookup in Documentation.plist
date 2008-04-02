@@ -1,56 +1,24 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>beforeRunningCommand</key>
-        <string>nop</string>
-        <key>command</key>
-        <string>#!/usr/bin/env ruby
-BEGIN {$VERBOSE = true}
-
-require &quot;#{ENV[&quot;TM_SUPPORT_PATH&quot;]}/lib/exit_codes&quot;
-require &quot;#{ENV[&quot;TM_SUPPORT_PATH&quot;]}/lib/escape&quot;
-require &quot;#{ENV[&quot;TM_SUPPORT_PATH&quot;]}/lib/web_preview&quot;
-
-# first escape for use in the shell, then escape for use in a JS string
-def e_js_sh(str)
-  (e_sh str).gsub(&quot;\\&quot;, &quot;\\\\\\\\&quot;)
-end
-
-term = STDIN.read.strip
-TextMate.exit_show_tool_tip(&quot;Please select a term to look up.&quot;) if term.empty?
-
-linked_ri     = &quot;#{ENV[&quot;TM_BUNDLE_SUPPORT&quot;]}/bin/linked_ri.rb&quot;
-documentation = `#{e_sh linked_ri} 2&gt;&amp;1 #{e_sh term}` rescue &quot;&lt;h1&gt;ri Command Error.&lt;/h1&gt;&quot;
-TextMate.exit_show_tool_tip(documentation) if documentation =~ /Nothing known about /
-
-html_header(&quot;Documentation for &apos;#{term}&apos;&quot;, &quot;RDoc&quot;, &lt;&lt;-HTML)
-  &lt;script type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;
-    function ri (arg) {
-			var res = TextMate.system(&quot;RUBYLIB=#{e_js_sh &quot;#{ENV[&apos;TM_SUPPORT_PATH&apos;]}/lib&quot;} #{e_js_sh linked_ri} 2&gt;&amp;1 &apos;&quot; + arg + &quot;&apos;&quot;, null).outputString;
-			document.getElementById(&quot;actual_output&quot;).innerHTML = res;
-			window.location.hash = &quot;actual_output&quot;;
-		}
-  &lt;/script&gt;
-HTML
-puts &lt;&lt;-HTML
-  &lt;pre&gt;&lt;div id=&quot;actual_output&quot;&gt;#{documentation}&lt;/div&gt;&lt;/pre&gt;
-HTML
-html_footer
-TextMate.exit_show_html</string>
-        <key>fallbackInput</key>
-        <string>word</string>
-        <key>input</key>
-        <string>selection</string>
-        <key>keyEquivalent</key>
-        <string>^h</string>
-        <key>name</key>
-        <string>Documentation for Word / Selection</string>
-        <key>output</key>
-        <string>showAsTooltip</string>
-        <key>scope</key>
-        <string>source.ruby</string>
-        <key>uuid</key>
-        <string>63F3B3B7-CBE2-426B-B551-657733F3868B</string>
-    </dict>
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>"${TM_BUNDLE_SUPPORT}/bin/linked_ri.rb"</string>
+	<key>fallbackInput</key>
+	<string>word</string>
+	<key>input</key>
+	<string>selection</string>
+	<key>keyEquivalent</key>
+	<string>^h</string>
+	<key>name</key>
+	<string>Documentation for Word / Selection</string>
+	<key>output</key>
+	<string>showAsTooltip</string>
+	<key>scope</key>
+	<string>source.ruby, source.ruby.rails</string>
+	<key>uuid</key>
+	<string>63F3B3B7-CBE2-426B-B551-657733F3868B</string>
+</dict>
 </plist>
