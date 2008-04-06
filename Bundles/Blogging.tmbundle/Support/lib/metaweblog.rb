@@ -1,6 +1,12 @@
 require 'xmlrpc/client'
+require "net/https" # OpenSSL::SSL::VERIFY_NONE
 
 class MetaWeblogClient < XMLRPC::Client
+  def initialize(*args)
+    super(*args)
+    @http.verify_mode = OpenSSL::SSL::VERIFY_NONE # squelch Net::HTTP warning
+    self.http_header_extra = { "User-Agent" => "TextMate/Blogging Bundle (Mac OS X; http://macromates.com/blog/archives/2006/06/19/blogging-from-textmate/)" }
+  end
   def get_post(post_id, username, password)
     call("metaWeblog.getPost", "#{post_id}", "#{username}", "#{password}")
   end
