@@ -18,18 +18,33 @@ def find_theme(uuid)
 	theme_dirs = [
 		File.expand_path('~/Library/Application Support/TextMate/Themes'),
 		'/Library/Application Support/TextMate/Themes',
-		TextMate.app_path + '/Contents/SharedSupport/Themes'
+		TextMate.app_path + '/Contents/SharedSupport/Themes',
+		TextMate.app_path + '/Themes'
 	]
+	
+	themes_list = Hash.new
 
 	theme_dirs.each do |theme_dir|
 		if File.exists? theme_dir
 			themes = Dir.entries(theme_dir).find_all { |theme| theme =~ /.+\.(tmTheme|plist)$/ }
 			themes.each do |theme|
-				plist = PropertyList.load(File.open("#{theme_dir}/#{theme}"))
-				return plist if plist["uuid"] == uuid
+				plist = OSX::PropertyList.load(File.open("#{theme_dir}/#{theme}"))
+				if uuid
+					return plist if plist["uuid"] == uuid
+				else
+					themes_list[plist["name"]] = plist
+				end
 			end
 		end
 	end
+	return nil if uuid
+	require "#{ENV['TM_SUPPORT_PATH']}/lib/ui"
+	options = {
+		:title => "Select theme",
+		:items => themes_list.keys
+	}
+	theme = TextMate::UI.request_item(options)
+	return themes_list[theme] if theme
 	return nil
 end
 
@@ -44,11 +59,15 @@ end
 
 def generate_stylesheet_from_theme(theme_class = nil)
 	theme_class = '' if theme_class == nil
-	require "#{ENV['TM_SUPPORT_PATH']}/lib/plist"
+	require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/plist"
 
 	# Load TM preferences to discover the current theme and font settings
-	textmate_pref_file = '~/Library/Preferences/com.macromates.textmate.plist'
-	prefs = PropertyList.load(File.open(File.expand_path(textmate_pref_file)))
+	textmate_pref_file = File.expand_path('~/Library/Preferences/com.macromates.textmate.plist')
+	if File.exist?(textmate_pref_file)
+		prefs = OSX::PropertyList.load(File.open(textmate_pref_file))
+	else
+		prefs = Hash.new
+	end
 	theme_uuid = prefs['OakThemeManagerSelectedTheme']
 	# Load the active theme. Unfortunately, this requires us to scan through
 	# all discoverable theme files...
