@@ -21,14 +21,13 @@ include ParseDate
 f = File.open(&apos;/tmp/index.html&apos;)
 downloadPage = f.read()
 f.close()
-downloadPage =~ %r{e_beta_setup.exe&lt;/a&gt;(.*)}
+downloadPage =~ %r{e_setup.exe&lt;/a&gt;(.*)}
 date,time,size = $1.split
 
 relNotePath = ENV[&apos;TM_SUPPORT_PATH&apos;] + &quot;/../release_notes.txt&quot;
 f = File.open(relNotePath)
-dateRel, ver = f.readline().split
+dateRel, dash, ver = f.readline().split
 f.close()
-
 
 yRel, mRel, dRel = parsedate(dateRel)
 y, m, d = parsedate(date)
@@ -36,7 +35,7 @@ relDate = Time.local(yRel, mRel, dRel)
 curDate = Time.local(y,m,d)
 
 if (relDate != curDate)
-STDOUT &lt;&lt; &quot;Newer version than &quot; + ver + &quot; Exists. Pick it up at &lt;a href=&apos;http://www.e-texteditor.com/download/e_beta_setup.exe&apos;&gt; here. &lt;/a&gt;&quot;
+STDOUT &lt;&lt; &quot;Newer version than &quot; + ver + &quot; Exists. Pick it up at &lt;a href=&apos;http://www.e-texteditor.com/download/e_setup.exe&apos;&gt; here. &lt;/a&gt;&quot;
 else
 STDOUT &lt;&lt; &quot;You have the latest release of version: &quot; + ver
 end</string>
