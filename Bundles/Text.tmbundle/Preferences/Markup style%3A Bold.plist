@@ -2,13 +2,16 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>content</key>
-	<string>(c) Copyright `date +%Y` $TM_FULLNAME. All Rights Reserved. </string>
 	<key>name</key>
-	<string>Copyright Notice</string>
-	<key>tabTrigger</key>
-	<string>c)</string>
+	<string>Style: Bold</string>
+	<key>scope</key>
+	<string>markup.bold</string>
+	<key>settings</key>
+	<dict>
+		<key>bold</key>
+		<string>1</string>
+	</dict>
 	<key>uuid</key>
-	<string>BC8B89E4-5F16-11D9-B9C3-000D93589AF6</string>
+	<string>A088E2CA-03E7-4A8C-855C-AC954E739D6D</string>
 </dict>
 </plist>
