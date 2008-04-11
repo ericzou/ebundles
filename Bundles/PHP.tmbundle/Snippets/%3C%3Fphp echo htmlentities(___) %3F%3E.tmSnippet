@@ -3,17 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>${1:public }function ${2:FunctionName}(${3:\$${4:value}${5:=''}})
-{
-	${0:# code...}
-}</string>
+	<string>&lt;?php echo htmlentities(${1:\$var}, ENT_QUOTES, 'utf-8') ?&gt;$0</string>
 	<key>name</key>
-	<string>function …</string>
+	<string>&lt;?php echo htmlentities(…) ?&gt;</string>
 	<key>scope</key>
-	<string>source.php</string>
+	<string>text.html</string>
 	<key>tabTrigger</key>
-	<string>fun</string>
+	<string>echoh</string>
 	<key>uuid</key>
-	<string>EC96DA26-8CCF-11D9-B507-000D93C8BE28</string>
+	<string>ED759470-69D7-4ADF-9842-D890DEB00F19</string>
 </dict>
 </plist>

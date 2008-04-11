@@ -3,17 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>${1:public }function ${2:FunctionName}(${3:\$${4:value}${5:=''}})
-{
-	${0:# code...}
-}</string>
+	<string>&lt;?php else: ?&gt;</string>
 	<key>name</key>
-	<string>function …</string>
+	<string>&lt;?php else: ?&gt;</string>
 	<key>scope</key>
-	<string>source.php</string>
+	<string>text.html</string>
 	<key>tabTrigger</key>
-	<string>fun</string>
+	<string>else</string>
 	<key>uuid</key>
-	<string>EC96DA26-8CCF-11D9-B507-000D93C8BE28</string>
+	<string>3F335934-360B-40F2-9D5C-CB299FD2F215</string>
 </dict>
 </plist>

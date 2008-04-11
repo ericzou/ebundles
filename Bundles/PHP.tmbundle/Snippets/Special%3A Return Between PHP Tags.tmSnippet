@@ -3,14 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>print "${1:string}"${2: . };$0</string>
+	<string>
+	$0
+</string>
+	<key>keyEquivalent</key>
+	<string></string>
 	<key>name</key>
-	<string>print ".."</string>
+	<string>Special: Return Between PHP Tags</string>
 	<key>scope</key>
-	<string>source.php</string>
-	<key>tabTrigger</key>
-	<string>print</string>
+	<string>meta.consecutive-tags.php</string>
 	<key>uuid</key>
-	<string>2B91DE5F-8CD0-11D9-B507-000D93C8BE28</string>
+	<string>89385241-0117-42AE-BDAE-0471554CC3DF</string>
 </dict>
 </plist>

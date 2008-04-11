@@ -1,3 +1,7 @@
+# Language
+
+**Note**: you should always select the `HTML` language when working with PHP (and not the `PHP` language). You can switch language by selecting `HTML` from the status bar at the bottom of the window, or by pressing `⌃⌥⇧H`.
+
 # Snippets
 
 ## Control Structures
@@ -44,6 +48,12 @@ You can hold ⌃ when you drop the file to generate a `require` instead, and you
 The command ⇧⌘D can be used to jump to a file included from the current document. If invoked on a line with an `include`/`require` directive, it will search for that file. Otherwise, a menu of all the included files will be displayed. The environment variable `PHP_INCLUDE_PATH` is searched for the included path as above.
 
 # Setup
+
+## PHP Versions
+
+If you use PHP 5 (rather than PHP 4 which is bundled with OS X) then you’ll want to make sure TextMate is using PHP 5 so that the Validate and Run commands work. To do this you’ll need to have PHP 5 installed – I recommend [these packages](http://www.entropy.ch/software/macosx/php/).
+
+Once PHP is installed, you need to make TextMate use the new PHP binary. You can either replace the default `/usr/bin/php` with the PHP 5 binary (e.g. with a symlink) or you can set the `TM_PHP` environment variable to the absolute path to the PHP executable through TextMate → Preferences → Advanced → Shell Variables.
 
 ## Include Path Configuration
 
