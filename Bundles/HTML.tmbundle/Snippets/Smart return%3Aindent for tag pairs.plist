@@ -3,14 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>&lt;h5 id="${1/[[:alpha:]]+|( )/(?1:_:\L$0)/g}"&gt;${1:$TM_SELECTED_TEXT}&lt;/h5&gt;</string>
+	<string>
+	$0
+</string>
+	<key>keyEquivalent</key>
+	<string></string>
 	<key>name</key>
-	<string>Heading 5</string>
+	<string>Special: Return Inside Empty Open/Close Tags</string>
 	<key>scope</key>
-	<string>text.html</string>
-	<key>tabTrigger</key>
-	<string>h5</string>
+	<string>meta.scope.between-tag-pair</string>
 	<key>uuid</key>
-	<string>2D357894-D76C-4657-B23F-494843A45A4B</string>
+	<string>3C44EABE-8D6F-4B1B-AB91-F419FAD1A0AD</string>
 </dict>
 </plist>

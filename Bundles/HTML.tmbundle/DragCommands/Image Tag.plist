@@ -1,35 +1,33 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>command</key>
-        <string>#!/usr/bin/env ruby
+<dict>
+	<key>command</key>
+	<string>img="$TM_DROPPED_FILE"
+echo -n "&lt;img src=\"$img\" "
 
-if File.exists?(ENV[&apos;TM_BUNDLE_SUPPORT&apos;] + &quot;/bin/sips&quot;)
-  SIPS = ENV[&apos;TM_BUNDLE_SUPPORT&apos;] + &quot;/bin/sips&quot;
-else
-  SIPS = &quot;sips&quot;
-end
+sips -g pixelWidth -g pixelHeight "$img" \
+|awk '/pixelWidth/  { printf("width=\"%d\" ",  $2) }
+      /pixelHeight/ { printf("height=\"%d\" ", $2) }'
 
-imgsrc = `cygpath -m \&quot;#{ENV[&apos;TM_DROPPED_FILEPATH&apos;]}\&quot;`.chomp
-imgdims = `\&apos;#{SIPS}\&apos; -g pixelWidth -g pixelHeight \&apos;#{imgsrc}\&apos;`
-imgdims = imgdims.split(&quot;\n&quot;).collect { |dim| dim.gsub(/\D/,&quot;&quot;) }
-alt = File.basename(imgsrc, &quot;.*&quot;).gsub(&quot;\\&quot;,&quot;&quot;)
-print &quot;&lt;img src=\&quot;#{ENV[&apos;TM_DROPPED_FILE&apos;]}\&quot; width=\&quot;#{imgdims[0]}\&quot; height=\&quot;#{imgdims[1]}\&quot; alt=\&quot;#{alt}\&quot; title=\&quot;#{alt}\&quot;#{ENV[&apos;TM_XHTML&apos;]}&gt;&quot;</string>
-        <key>draggedFileExtensions</key>
-        <array>
-            <string>png</string>
-            <string>jpeg</string>
-            <string>jpg</string>
-            <string>gif</string>
-        </array>
-        <key>name</key>
-        <string>Insert Image With Dimensions</string>
-        <key>output</key>
-        <string>insertAsSnippet</string>
-        <key>scope</key>
-        <string>text.html</string>
-        <key>uuid</key>
-        <string>CD6D2CC6-6B33-11D9-BDFD-000D93589AF6</string>
-    </dict>
+base=${img##*/}
+alt=$(tr &lt;&lt;&lt;${base%.*} '[_-]' ' '|perl -pe 's/(\w+)/\u$1/g')
+echo -n "alt=\"$alt\"${TM_XHTML}&gt;"
+</string>
+	<key>draggedFileExtensions</key>
+	<array>
+		<string>png</string>
+		<string>jpeg</string>
+		<string>jpg</string>
+		<string>gif</string>
+	</array>
+	<key>name</key>
+	<string>Insert Image With Dimensions</string>
+	<key>output</key>
+	<string>insertAsSnippet</string>
+	<key>scope</key>
+	<string>text.html</string>
+	<key>uuid</key>
+	<string>CD6D2CC6-6B33-11D9-BDFD-000D93589AF6</string>
+</dict>
 </plist>

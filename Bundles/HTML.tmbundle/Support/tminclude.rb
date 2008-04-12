@@ -166,7 +166,7 @@ module TextMate
       filepath = e_sh(ENV['TM_FILEPATH'] || '/dev/null')
       argstr = ''
       vars.each_pair { | k, v | argstr << " " << e_sh(k) << " " << e_sh(v) }
-      %x{#{file} #{filepath}#{argstr}};
+      %x{#{e_sh file} #{filepath}#{argstr}};
     end
 
     def process_include(file, args, vars)
@@ -245,7 +245,7 @@ module TextMate
     def var_username
       # store the username into the variable stash so we don't have
       # to do this again...
-      @global_vars['username'] = "#{%x{niutil -readprop / /users/#{ENV['USER']} realname}}".chomp
+      @global_vars['username'] = ENV['TM_FULLNAME']
     end
 
     def process_document(doc, vars)
@@ -306,11 +306,11 @@ module TextMate
       #initialize
       init_comment_delimiters()
 
-      require "#{ENV['TM_SUPPORT_PATH']}/lib/dialog.rb"
+      require "#{ENV['TM_SUPPORT_PATH']}/lib/ui.rb"
       cstart = (@escape_open).rstrip + ' '
       cend = (' ' + @escape_close).rstrip
       begin
-        Dialog.request_file do | file |
+        TextMate::UI.request_file do | file |
           print <<-"EOT"
 #{cstart}#tminclude "#{file}"#{cend}
 #{cstart}end tminclude#{cend}

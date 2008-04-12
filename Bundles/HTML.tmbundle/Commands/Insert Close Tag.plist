@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-    <dict>
-        <key>beforeRunningCommand</key>
-        <string>nop</string>
-        <key>command</key>
-        <string>#!/usr/bin/env ruby
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby
 
 doc        = STDIN.read
 line       = ENV['TM_LINE_NUMBER'].to_i
@@ -42,19 +42,19 @@ before.scan(/&lt;\s*(\/)?\s*(\w[\w:-]*)[^&gt;]*&gt;/) do |m|
 end
 
 if stack.empty? then
-  exit
+  %x{ osascript -e beep &amp;&gt;/dev/null &amp; }
 else
   print "&lt;/#{stack.pop}&gt;"
 end</string>
-        <key>input</key>
-        <string>document</string>
-        <key>keyEquivalent</key>
-        <string>~@.</string>
-        <key>name</key>
-        <string>Insert Close Tag</string>
-        <key>output</key>
-        <string>afterSelectedText</string>
-        <key>uuid</key>
-        <string>0658019F-3635-462E-AAC2-74E4FE508A9B</string>
-    </dict>
+	<key>input</key>
+	<string>document</string>
+	<key>keyEquivalent</key>
+	<string>~@.</string>
+	<key>name</key>
+	<string>Insert Close Tag</string>
+	<key>output</key>
+	<string>afterSelectedText</string>
+	<key>uuid</key>
+	<string>0658019F-3635-462E-AAC2-74E4FE508A9B</string>
+</dict>
 </plist>
