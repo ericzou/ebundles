@@ -2,18 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>autoScrollOutput</key>
+    <true/>
 	<key>beforeRunningCommand</key>
 	<string>nop</string>
 	<key>command</key>
-	<string># Save file, use tmp-file if there's no filepath.
-[[ -z "$TM_FILEPATH" ]] &amp;&amp; TM_TMPFILE=$(mktemp -t pythonmate)
-: "${TM_FILEPATH:=$TM_TMPFILE}"; cat &gt;"$TM_FILEPATH"
-
-TPY=${TM_PYTHON:-pythonw}
-
-"$TPY" "$TM_BUNDLE_SUPPORT/pymate.py" "$TM_FILEPATH"
-
-rm -f "$TM_TMPFILE"</string>
+	<string>export TM_RUBY=$(type -p "${TM_RUBY:-ruby}")
+"$TM_RUBY" -- "$TM_BUNDLE_SUPPORT/PyMate/pymate.rb"</string>
 	<key>input</key>
 	<string>document</string>
 	<key>keyEquivalent</key>

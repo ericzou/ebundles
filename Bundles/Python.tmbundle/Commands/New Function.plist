@@ -5,7 +5,8 @@
 	<key>beforeRunningCommand</key>
 	<string>nop</string>
 	<key>command</key>
-	<string>#!/usr/bin/env python
+	<string>#!/usr/bin/env python -S
+# coding: utf-8
 
 # This program takes in the name of one of python's special methods, and
 # spits a snippet out.  If the name is unknown, make a regular (non-magic)
@@ -44,7 +45,7 @@ selfAndMore = {
             'exit' : 'exc_type, exc_value, traceback',
 }
 
-sPass = "\t${0:pass}"
+sPass = '\t${4/.+/"""/}${4:docstring for %s}${4/.+/"""\n/}${4/.+/\t/}${0:pass}'
 
 def defLine(func, args):
     return ''.join(["def __", func, "__(", args, "):\n", sPass])
@@ -63,11 +64,16 @@ def make_snippet(name):
         return defLine(name, 'self${2/([^,])?.*/(?1:, )/}${2:arg}')
         
     else:
-        return ''.join(['def ', name, '(${3:self${2/([^,])?.*/(?1:, )/}${2:arg}}):\n', sPass])
+        return ''.join(['def ', name, '(${3:self${2/([^,])?.*/(?1:, )/}${2:arg}}):\n', sPass % name])
 
 # actually print the thing out, using the current word in TM
 from os import environ as env
-print make_snippet(env['TM_CURRENT_WORD'])</string>
+from sys import exit
+try:
+    print make_snippet(env['TM_CURRENT_WORD'])
+except KeyError:
+    print 'Please type the new function\'s name\n(you can also use def⇥).'
+    exit(206)</string>
 	<key>fallbackInput</key>
 	<string>word</string>
 	<key>input</key>

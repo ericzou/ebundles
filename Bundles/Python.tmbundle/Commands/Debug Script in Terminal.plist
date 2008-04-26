@@ -45,5 +45,10 @@ fi
 	<string>source.python</string>
 	<key>uuid</key>
 	<string>504278F6-89F4-11D9-9326-000D93B6E43C</string>
+    <key>winCommand</key>
+    <string>TPY=${TM_PYTHON:=python}
+
+run rxvt -e bash -c "clear; cd '${TM_DIRECTORY}'; ${TPY} -m pdb '${TM_FILEPATH}'"
+</string>
 </dict>
 </plist>
