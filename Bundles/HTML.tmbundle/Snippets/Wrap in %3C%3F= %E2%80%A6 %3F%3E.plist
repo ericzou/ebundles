@@ -5,7 +5,7 @@
 	<key>content</key>
 	<string>&lt;?= $TM_SELECTED_TEXT ?&gt;</string>
 	<key>name</key>
-	<string>Wrap in &lt;?= … ?&gt;</string>
+	<string>Wrap in &lt;?= ... ?&gt;</string>
 	<key>scope</key>
 	<string>text.html string</string>
 	<key>uuid</key>
