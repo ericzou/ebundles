@@ -94,6 +94,17 @@
             </dict>
             <dict>
                 <key>name</key>
+                <string>Keyword.operators &amp; puctuation.separators</string>
+                <key>settings</key>
+                <dict>
+                    <key>foreground</key>
+                    <string>#BEBEBE</string>
+                </dict>
+                <key>scope</key>
+                <string>keyword.operator, punctuation.separator</string>
+            </dict>
+            <dict>
+                <key>name</key>
                 <string>Storage</string>
                 <key>scope</key>
                 <string>storage</string>
