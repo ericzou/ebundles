@@ -82,16 +82,15 @@ module TextMate
       def menu(options)
         return nil if options.empty?
         
-        if options[0].kind_of?(Hash)
-          return_hash = true
-          options = options.collect { |e| e['separator'] ? '-' : e['title'] }
-        else
-          return_hash = false
-          options = options.collect { |e| e == nil ? '-' : e }
-        end
+        return_hash = options[0].kind_of?(Hash)
 
         _options = Hash.new
-        _options["items"] = options
+        _options["items"] = (
+            if return_hash
+              options.collect { |e| e['separator'] ? '-' : e['title'] }
+            else
+              options.collect { |e| e == nil ? '-' : e }
+            end )
         _options["no-newfile"] = ""
 
         res = cocoa_dialog("menu", _options)

@@ -1,8 +1,12 @@
-require "#{ENV['TM_SUPPORT_PATH']}/lib/plist"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/osx/plist"
+
+require 'uri'
 
 module Browser
   class << self
     def load_url(url)
+      url = URI.parse(url.to_s)
+      return if url.scheme.nil?
       browsers = [
         { :name => "Camino",  :id => "org.mozilla.camino" },
         { :name => "OmniWeb", :id => "com.omnigroup.omniweb5" },
@@ -12,7 +16,7 @@ module Browser
 
       fav = favorite.to_s.downcase
       browsers.each do |browser|
-        if fav == browser[:id] && %x{ps -xc|grep -sq #{browser[:name]}} then
+        if fav == browser[:id] && (%x{ps -xc|grep -qs #{browser[:name]}}; $?.exitstatus == 0) then
           return if self.send(browser[:id].tr('.', '_') + '_did_load?', url)
         end
       end
@@ -23,7 +27,7 @@ module Browser
     def favorite
       rec = nil
       open(File.expand_path("~/Library/Preferences/com.apple.LaunchServices.plist")) do |io|
-        rec = PropertyList.load(io)["LSHandlers"].find { |info| info["LSHandlerURLScheme"] == "http" }
+        rec = OSX::PropertyList.load(io)["LSHandlers"].find { |info| info["LSHandlerURLScheme"] == "http" }
       end
     rescue
     ensure

@@ -301,7 +301,7 @@
 			<key>applyEndPatternLast</key>
 			<integer>1</integer>
 			<key>begin</key>
-			<string>\b(?=(s)(\s+\S|\s*[;\,\#\{\}\(\)\[&lt;]|$))</string>
+			<string>\b(?=(?&lt;!\&amp;)(s)(\s+\S|\s*[;\,\#\{\}\(\)\[&lt;]|$))</string>
 			<key>comment</key>
 			<string>string.regexp.replace.perl</string>
 			<key>end</key>
@@ -3013,6 +3013,14 @@
 			<string>\)</string>
 			<key>patterns</key>
 			<array>
+				<dict>
+					<key>comment</key>
+					<string>This is to prevent thinks like qr/foo$/ to treat $/ as a variable</string>
+					<key>match</key>
+					<string>\$(?=[^\s\w\'\{\[\(\&lt;])</string>
+					<key>name</key>
+					<string>keyword.control.anchor.perl</string>
+				</dict>
 				<dict>
 					<key>include</key>
 					<string>#escaped_char</string>
