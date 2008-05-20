@@ -98,7 +98,7 @@ def tm_excepthook(e_type, e, tb):
                 for arg in e.args[1:]:
                     message += ", %s" % arg
         if isinstance(message, unicode):
-        io.write("<p id='exception'><strong>%s:</strong> %s</p>\n" %
+            io.write("<p id='exception'><strong>%s:</strong> %s</p>\n" %
                                 (e_type.__name__, escape(message).encode("utf-8")))
         else:
             io.write("<p id='exception'><strong>%s:</strong> %s</p>\n" %
