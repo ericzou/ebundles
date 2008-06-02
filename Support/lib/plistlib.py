@@ -193,7 +193,7 @@ def _dateFromString(s):
         lst.append(int(val))
 
     try:
-    return datetime.datetime(*lst)
+      return datetime.datetime(*lst)
     except ValueError:
       return datetime.datetime.min
 
