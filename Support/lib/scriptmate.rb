@@ -5,11 +5,12 @@ require SUPPORT_LIB + 'io'
 
 require 'cgi'
 require 'fcntl'
+require 'tempfile'
 
 $KCODE = 'u'
 require 'jcode'
 
-$SCRIPTMATE_VERSION = "$Revision: 8839 $"
+$SCRIPTMATE_VERSION = "$Revision: 9894 $"
 
 def my_popen3(*cmd) # returns [stdin, stdout, strerr, pid]
   pw = IO::pipe   # pipe[0] for read, pipe[1] for write
@@ -62,6 +63,7 @@ class UserCommand
   def to_s
     @cmd.to_s
   end
+  def cleanup; end
 end
 
 class CommandMate
@@ -114,26 +116,71 @@ class CommandMate
       end
       emit_footer()
       Process.waitpid(@pid)
+      @command.cleanup
     end
+end
+
+
+def String.random_alphanumeric(size=16)
+  s = ""
+  size.times { s << (i = Kernel.rand(62); i += ((i < 10) ? 48 : ((i < 36) ? 55 : 61 ))).chr }
+  s
 end
 
 class UserScript
   attr_reader :display_name, :path, :warning
-  def initialize(content, write_content_to_stdin=true)
-    @warning = nil
-    @write_content_to_stdin = write_content_to_stdin
+  def initialize(content)
+    
+    @warning = ''
     @content = content
-    # match the entire she-bang.
     @hashbang = $1 if @content =~ /\A#!(.*)$/
+    
+    saved = true
     if ENV.has_key? 'TM_FILEPATH' then
       @path = ENV['TM_FILEPATH']
       @display_name = File.basename(@path)
-    else
-      @path = '-'
-      @display_name = 'untitled'
+      saved = false
+    end
+    
+    @temp_path = nil
+    if not saved or not ENV.has_key? 'TM_FILEPATH'
+      saved = true
+      @display_name = "untitled" + default_extension
+      @path = random_file_name
+      # store @path as @temp_path so we don't accidentally unlink
+      # an non-temporary file.
+      @temp_path = @path 
+      begin
+        f = open(@path, 'w')
+        ENV["TM_SCRIPT_IS_UNTITLED"] = "true"
+        f.write @content
+      rescue Errno::EACCES
+        saved = false
+        @warning += "\nCould not open temp file, writing script on stdin..."
+      ensure
+        f.close
+      end
+    end
+    
+    if not saved
+      raise Exception("Could not save file or write to temporary directory.")
     end
   end
+  
+  def random_file_name
+    p = "/tmp/tm_script" + String.random_alphanumeric(4) + default_extension()
+    while File.exists? p
+      p  = "/tmp/tm_script" + String.random_alphanumeric(4) + default_extension()
+    end
+    p
+  end
+  
   public
+    
+    def cleanup
+      File.unlink(@temp_path) if @temp_path and File.exists? @temp_path
+    end
+    
     def executable
       # return the path to the executable that will run @content.
     end
@@ -149,6 +196,9 @@ class UserScript
     def version_string
       # return the version string of the executable.
     end
+    def default_extension
+      # return the extension to use if the script has not yet been saved
+    end
     def run
       rd, wr = IO.pipe
       rd.fcntl(Fcntl::F_SETFD, 1)
@@ -156,9 +206,9 @@ class UserScript
       Dir.chdir(File.dirname(@path)) if @path != "-"
       cmd = filter_cmd([executable, args, e_sh(@path), ARGV.to_a ].flatten)
       stdin, stdout, stderr, pid = my_popen3(cmd.join(" "))
-      if @write_content_to_stdin
-        Thread.new { stdin.write @content; stdin.close } if @path == "-"
-      end
+      # if @path == "-"
+      #   Thread.new { stdin.write @content; stdin.close }
+      # end
       wr.close
       [ stdout, stderr, rd, pid ]
     end

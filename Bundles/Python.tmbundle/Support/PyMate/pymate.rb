@@ -5,7 +5,7 @@ require 'jcode'
 
 STDOUT.sync = true
 
-$SCRIPTMATE_VERSION = "$Revision: 8839 $"
+$SCRIPTMATE_VERSION = "$Revision: 9890 $"
 
 class PythonScript < UserScript
   def lang; "Python" end
@@ -30,6 +30,7 @@ class PythonScript < UserScript
                   Pathname.new("PyMate")
     return ["export PYTHONPATH=\"#{pymatepath}:$PYTHONPATH\";"] + cmd
   end
+  def default_extension; ".py" end
 end
 
 class PyMate < ScriptMate
@@ -65,5 +66,5 @@ class PyMate < ScriptMate
   end
 end
 
-script = PythonScript.new(STDIN.read, false)
+script = PythonScript.new(STDIN.read)
 PyMate.new(script).emit_html
