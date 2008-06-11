@@ -220,26 +220,6 @@ class ScriptMate < CommandMate
     def emit_header
       puts html_head(:window_title => "#{@command.display_name} — #{@mate}", :page_title => "#{@mate}", :sub_title => "#{@command.lang}")
       puts <<-HTML
-<!-- scriptmate javascripts -->
-<script type="text/javascript" charset="utf-8">
-function press(evt) {
-   if (evt.keyCode == 67 && evt.ctrlKey == true) {
-      TextMate.system("kill -s INT #{@pid}; sleep 0.5; kill -s TERM #{@pid}", null);
-   }
-}
-document.body.addEventListener('keydown', press, false);
-
-function copyOutput(link) {
-  output = document.getElementById('_scriptmate_output').innerText;
-  cmd = TextMate.system('__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 /usr/bin/pbcopy', function(){});
-  cmd.write(output);
-  cmd.close();
-  link.innerText = 'output copied to clipboard';
-}
-</script>
-<!-- end javascript -->
-HTML
-      puts <<-HTML
   <style type="text/css">
     /* =================== */
     /* = ScriptMate Styles = */
@@ -303,9 +283,6 @@ HTML
   </style>
   <strong class="warning" style="float:left; color:#B4AF00;">#{@command.warning}</strong>
   <div class="scriptmate #{@mate.downcase}">
-  <div class="controls" style="text-align:right;">
-    <a style="text-decoration: none;" href="#" onclick="copyOutput(document.getElementById('_script_output'))">copy output</a>
-  </div>
   <!-- first box containing version info and script output -->
   <pre>
 <strong>#{@mate} r#{$SCRIPTMATE_VERSION[/\d+/]} running #{@command.version_string}</strong>

@@ -23,7 +23,7 @@ HTML_TEMPLATE = <<-HTML
   <script src="file://<%= support_path %>/script/webpreview.js" type="text/javascript" charset="utf-8"></script>
   <script src="file://<%= support_path %>/script/sortable.js" type="text/javascript" charset="utf-8"></script>
   <script type="text/javascript" charset="utf-8">
-    var image_path = "file://<%= support_path %>/images/";
+    var image_path = "file://<%= support_path %>/images" + "\\\\";
   </script>
   <%= html_head %>
 </head>
