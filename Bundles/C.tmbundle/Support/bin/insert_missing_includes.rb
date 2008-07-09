@@ -3,7 +3,6 @@
 require 'set'
 
 MARK = [0xFFFC].pack("U").freeze
-def esc (txt); txt.gsub(/[$`\\]/, '\\\\\0'); end
 parts = STDIN.read.split(MARK)
 src = parts.join
 
@@ -50,4 +49,4 @@ parts[0].sub!(/\A (?:
    |                                    # blank lines
   ) \s* $ \n )*/x, '\0' + new_includes)
 
-print parts.collect { |part| esc part }.join('${0}')
+print parts.join('${0}')
