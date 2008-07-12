@@ -55,7 +55,8 @@ module TextMate
 
         options = {:version_args  => ['--version'],
                    :version_regex => /\A(.*)$/,
-                   :env           => ENV}
+                   :env           => nil,
+                   :script_args   => []}
 
         options.merge! args.pop if args.last.is_a? Hash
 
@@ -65,8 +66,10 @@ module TextMate
         tm_error_fd_read.fcntl(Fcntl::F_SETFD, 1)
         ENV['TM_ERROR_FD'] = tm_error_fd_write.to_i.to_s
 
-        # version = $1 if options[:version_regex] =~ Process.run(args[0], options[:version_args], :interactive_input => true)[0]
-        version = $1 if options[:version_regex] =~ `#{e_sh args[0]} #{options[:version_args].flatten.join(" ")}`
+        out, err = Process.run(args[0], options[:version_args], :interactive_input => false)
+        version = $1 if options[:version_regex] =~ (out + err)
+
+        options[:script_args].each { |arg| args << arg }
 
         TextMate::HTMLOutput.show(:title => "Running “#{ENV['TM_DISPLAYNAME']}”…", :sub_title => version) do |io|
 
@@ -108,24 +111,6 @@ module TextMate
 
       def process_output_wrapper(io)
         io << <<-HTML
-<!-- executor javascripts -->
-<script type="text/javascript" charset="utf-8">
-//function press(evt) {
-//   if (evt.keyCode == 67 && evt.ctrlKey == true) {
-//      TextMate.system("kill -s INT #{@pid}; sleep 0.5; kill -s TERM #{@pid}", null);
-//   }
-//}
-//document.body.addEventListener('keydown', press, false);
-
-//function copyOutput(link) {
-//  output = document.getElementById('_scriptmate_output').innerText;
-//  cmd = TextMate.system('__CF_USER_TEXT_ENCODING=$UID:0x8000100:0x8000100 /usr/bin/pbcopy', function(){});
-//  cmd.write(output);
-//  cmd.close();
-//  link.innerText = 'output copied to clipboard';
-//}
-</script>
-<!-- end javascript -->
 <style type="text/css">
 
   div.executor pre em

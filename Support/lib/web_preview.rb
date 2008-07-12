@@ -13,6 +13,7 @@ HTML_TEMPLATE = <<-HTML
   <% } %>
   <% bundle_styles.each { |style| %>
     <link rel="stylesheet" href="file://<%= bundle_support %>/css/<%= style %>/style.css"   type="text/css" charset="utf-8" media="screen">
+    <link rel="stylesheet" href="file://<%= bundle_support %>/css/<%= style %>/print.css"   type="text/css" charset="utf-8" media="print">
   <% } %>
   <% user_styles.each { |style| %>
     <link rel="stylesheet" href="file://<%= user_path %>/<%= style %>/style.css"   type="text/css" charset="utf-8" media="screen">
@@ -75,7 +76,7 @@ def html_head(options = { })
   
   common_styles  = ['default'];
   user_styles    = [];
-  bundle_styles  = ['default'];
+  bundle_styles  = bundle_support.nil? ? [] : ['default'];
 
   Dir.foreach(user_path) { |file|
     user_styles << file if File.exist?(user_path + file + '/style.css')
