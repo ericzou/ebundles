@@ -3,15 +3,16 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>#!/usr/bin/env ruby${TM_RUBY_SWITCHES: -wKU}
-</string>
+	<string>namespace :${1:${TM_FILENAME/\.\w+//}} do
+	$0
+end</string>
 	<key>name</key>
-	<string>#!/usr/bin/env ruby -wKU</string>
+	<string>namespace :.. do .. end</string>
 	<key>scope</key>
 	<string>source.ruby</string>
 	<key>tabTrigger</key>
-	<string>rb</string>
+	<string>nam</string>
 	<key>uuid</key>
-	<string>A05CBDD6-845D-45EB-94FB-F8787F5456BE</string>
+	<string>05EE1046-5ED7-48F5-8693-1F066163B2F4</string>
 </dict>
 </plist>

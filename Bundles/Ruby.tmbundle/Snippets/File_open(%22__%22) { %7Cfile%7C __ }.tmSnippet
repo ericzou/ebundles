@@ -3,15 +3,14 @@
 <plist version="1.0">
 <dict>
 	<key>content</key>
-	<string>#!/usr/bin/env ruby${TM_RUBY_SWITCHES: -wKU}
-</string>
+	<string>File.open(${1:"${2:path/to/file}"}${3/(^[rwab+]+$)|.*/(?1:, ")/}${3:w}${3/(^[rwab+]+$)|.*/(?1:")/}) { |${4:file}| $0 }</string>
 	<key>name</key>
-	<string>#!/usr/bin/env ruby -wKU</string>
+	<string>File.open("..") { |file| .. }</string>
 	<key>scope</key>
 	<string>source.ruby</string>
 	<key>tabTrigger</key>
-	<string>rb</string>
+	<string>File</string>
 	<key>uuid</key>
-	<string>A05CBDD6-845D-45EB-94FB-F8787F5456BE</string>
+	<string>397FA09F-A30F-4EE4-920C-318D5004EE97</string>
 </dict>
 </plist>
