@@ -38,7 +38,7 @@ module TextMate
             <p>#{message || "To succesfully run this action you need to
             install <tt>«#{command}»</tt>. If you know that it is already
             installed on your system, you instead need to update
-            your search path.</p>
+            your search path."}</p>
 
             <p>For diagnostic purposes, the paths searched for <tt>«#{command}»</tt> were:</p>
 
