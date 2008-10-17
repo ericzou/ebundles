@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>beforeRunningCommand</key>
-	<string>nop</string>
-	<key>command</key>
-	<string>#!/usr/bin/env ruby
+    <dict>
+        <key>beforeRunningCommand</key>
+        <string>nop</string>
+        <key>command</key>
+        <string>#!/usr/bin/env ruby
 
 # by James Edward Gray II &lt;james (at) grayproductions.net&gt;
 
@@ -25,9 +25,9 @@ require "#{ENV["TM_SUPPORT_PATH"]}/lib/escape"
 def out(*args)
   print( *args.map do |arg|
     escaped = e_sn(arg)
-    $selected ? escaped.gsub("}", "\\}") : escaped.sub("\0", "${0}")
+    $selected ? escaped.gsub("}", "\\}").gsub("|", "\\|") : escaped.sub("\0", "${0}")
   end )
-end
+end 
 
 # find all available comment variables
 var_suffixes = [""]
@@ -153,17 +153,19 @@ when "block" # apply comment around selection
   end
 end
 </string>
-	<key>fallbackInput</key>
-	<string>line</string>
-	<key>input</key>
-	<string>selection</string>
-	<key>keyEquivalent</key>
-	<string>@/</string>
-	<key>name</key>
-	<string>Comment Line / Selection</string>
-	<key>output</key>
-	<string>insertAsSnippet</string>
-	<key>uuid</key>
-	<string>73EAE95D-A09C-4FC2-B4E3-42505678B57E</string>
-</dict>
+        <key>fallbackInput</key>
+        <string>line</string>
+        <key>input</key>
+        <string>selection</string>
+        <key>keyEquivalent</key>
+        <string>@/</string>
+        <key>name</key>
+        <string>Comment Line / Selection</string>
+        <key>output</key>
+        <string>insertAsSnippet</string>
+        <key>uuid</key>
+        <string>73EAE95D-A09C-4FC2-B4E3-42505678B57E</string>
+        <key>scope</key>
+        <string></string>
+    </dict>
 </plist>
